@@ -75,7 +75,7 @@ function s.disop(e, tp, eg, ep, ev, re, r, rp)
 end
 --Activate cost
 function s.actarget(e, te, tp)
-	return te:GetHandler():GetSequence()~=e:GetHandler():GetSequence() and te:GetHandler():IsLocation(LOCATION_SZONE)
+	return te:GetHandler():GetSequence()~=e:GetHandler():GetSequence() and te:GetHandler():GetType()~=TYPE_SPELL+TYPE_FIELD and te:GetHandler():GetLocation()==LOCATION_SZONE
 end
 function s.costchk(e, te_or_c, tp)
 	local ct=#{Duel.GetPlayerEffect(tp, id)}
