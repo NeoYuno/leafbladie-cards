@@ -57,12 +57,15 @@ function s.splimit(e, se, sp, st)
 	return se:IsHasType(EFFECT_TYPE_ACTIONS)
 end
 --Spsummon
-function s.rescon(sg, e, tp, mg, c)
-	local sum=(sg:GetSum(Card.GetAttack)+sg:GetSum(Card.GetDefense))
-	return aux.ChkfMMZ(1)(sg, nil, 1-tp) and sum>=3000
+function s.sumfilter(c)
+	return c:GetAttack()+c:GetDefense()
+end
+function s.rescon(sg, e, tp, mg)
+	Duel.SetSelectedCard(sg)
+	return aux.ChkfMMZ(1)(sg, e, 1-tp, mg) and sg:CheckWithSumGreater(s.sumfilter, 3000)
 end
 function s.spcost(e, tp, eg, ep, ev, re, r, rp, chk)
-	local g=Duel.GetMatchingGroup(Card.IsReleasable, tp, 0, LOCATION_MZONE, nil)
+	local g=Duel.GetFieldGroup(tp, 0, LOCATION_MZONE)
 	if chk==0 then return aux.SelectUnselectGroup(g, e, tp, 1, #g, s.rescon, 0) end
 	local rg=aux.SelectUnselectGroup(g, e, tp, 1, #g, s.rescon, 1, tp, HINTMSG_RELEASE, s.rescon, nil, false)
 	Duel.Release(rg, REASON_COST)
