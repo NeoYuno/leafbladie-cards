@@ -101,15 +101,16 @@ function s.spcon(e, tp, eg, ep, ev, re, r, rp)
 	return true
 end
 function s.spcost(e, tp, eg, ep, ev, re, r, rp, chk)
-	if chk==0 then return ct>0 and Duel.CheckLPCost(tp, 100) end
-	ct=math.min(ct, Duel.GetLP(tp)//100)
+	if chk==0 then return Duel.CheckLPCost(tp, 100) end
+	local lp=Duel.GetLP(tp)
+	local m=math.floor(math.min(lp, Duel.GetLP(tp))/100)
 	local t={}
-	for i=1,ct do
+	for i=1,m do
 		t[i]=i*100
 	end
-	local cost=Duel.AnnounceNumber(tp, table.unpack(t))
-	Duel.PayLPCost(tp, cost)
-	e:SetLabel(cost)
+	local ac=Duel.AnnounceNumber(tp, table.unpack(t))
+	Duel.PayLPCost(tp, ac)
+	e:SetLabel(ac)
 end
 function s.spfilter(c, e, tp, val)
     return c:IsRace(RACE_FIEND) and c:IsNonEffectMonster() and (c:GetAttack()==val or c:GetDefense()==val) and c:IsCanBeSpecialSummoned(e, 0, tp, false, false)
@@ -130,7 +131,6 @@ function s.spop(e, tp, eg, ep, ev, re, r, rp)
 		local g2=Duel.GetMatchingGroup(s.thfilter, tp, LOCATION_DECK, 0, nil)
 		Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_ATOHAND)
 		local sg=g2:Select(tp, 1, 1, nil)
-		if not #sg>0 then return end
 		Duel.SendtoHand(sg, tp, REASON_EFFECT)
 		Duel.ConfirmCards(1-tp, sg)
     end
