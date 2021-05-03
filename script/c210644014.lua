@@ -13,6 +13,7 @@ function s.initial_effect(c)
 	e1:SetOperation(s.repop)
 	c:RegisterEffect(e1)
 end
+s.listed_names={97642679, 210644007}
 --Ritual materials
 function s.ritualfil(c)
     return c:IsRace(RACE_FIEND) and c:IsLevel(8) and c:IsRitualMonster()
@@ -27,7 +28,7 @@ function s.extraop(mg, e, tp, eg, ep, ev, re, r, rp)
     local mat2=mg:Filter(Card.IsLocation, nil, LOCATION_DECK):Filter(Card.IsRace, nil, RACE_FIEND)
     mg:Sub(mat2)
     Duel.ReleaseRitualMaterial(mg)
-    Duel.SendtoGrave(mat2,2, REASON_EFFECT+REASON_MATERIAL+REASON_RITUAL)
+    Duel.SendtoGrave(mat2, tp, REASON_EFFECT+REASON_MATERIAL+REASON_RITUAL)
 end
 --Destroy replace
 function s.repfilter(c, tp)
