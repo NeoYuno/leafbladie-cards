@@ -59,14 +59,14 @@ function s.discon(e, tp, eg, ep, ev, re, r, rp)
 	if rp==tp or not re:IsActiveType(TYPE_MONSTER) then return false end
 	local rc=re:GetHandler()
 	local p,loc,seq=Duel.GetChainInfo(ev, CHAININFO_TRIGGERING_CONTROLER, CHAININFO_TRIGGERING_LOCATION, CHAININFO_TRIGGERING_SEQUENCE)
-	return loc==LOCATION_MZONE and seq==e:GetHandler():GetSequence()
+	return loc==LOCATION_MZONE and rc:GetColumnGroup():IsContains(c)
 end
 function s.disop(e, tp, eg, ep, ev, re, r, rp)
 	Duel.NegateEffect(ev)
 end
 --Activate cost
 function s.actarget(e, te, tp)
-	return te:GetHandler():GetSequence()~=e:GetHandler():GetSequence() and te:GetHandler():IsType(TYPE_MONSTER)
+	return not te:GetHandler():GetColumnGroup():IsContains(c) and te:GetHandler():IsType(TYPE_MONSTER)
 end
 function s.costchk(e, te_or_c, tp)
 	local ct=#{Duel.GetPlayerEffect(tp, id)}

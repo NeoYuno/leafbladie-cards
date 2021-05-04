@@ -23,6 +23,7 @@ function s.initial_effect(c)
 	e2:SetCondition(s.discon)
 	e2:SetOperation(s.disop)
 	c:RegisterEffect(e2)
+	aux.DoubleSnareValidity(c, LOCATION_SZONE)
 	--Activate cost
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_FIELD)
@@ -57,9 +58,10 @@ end
 --Negate
 function s.discon(e, tp, eg, ep, ev, re, r, rp)
 	if rp==tp or not re:IsActiveType(TYPE_SPELL+TYPE_TRAP) then return false end
+	local c=e:GetHandler()
 	local rc=re:GetHandler()
 	local p,loc,seq=Duel.GetChainInfo(ev, CHAININFO_TRIGGERING_CONTROLER, CHAININFO_TRIGGERING_LOCATION, CHAININFO_TRIGGERING_SEQUENCE)
-	if re:IsHasType(EFFECT_TYPE_ACTIVATE) and (loc&LOCATION_SZONE==0 or rc:IsControler(1-p)) then
+	if (loc&LOCATION_SZONE==0 or rc:IsControler(1-p)) then
 		if rc:IsLocation(LOCATION_SZONE) and rc:IsControler(p) then
 			seq=rc:GetSequence()
 			loc=LOCATION_SZONE
@@ -68,14 +70,15 @@ function s.discon(e, tp, eg, ep, ev, re, r, rp)
 			loc=rc:GetPreviousLocation()
 		end
 	end
-	return loc&LOCATION_SZONE==LOCATION_SZONE and seq==e:GetHandler():GetSequence()
+	return loc&LOCATION_SZONE==LOCATION_SZONE and rc:GetColumnGroup():IsContains(c)
 end
 function s.disop(e, tp, eg, ep, ev, re, r, rp)
 	Duel.NegateEffect(ev)
 end
 --Activate cost
 function s.actarget(e, te, tp)
-	return te:GetHandler():GetSequence()~=e:GetHandler():GetSequence() and te:GetHandler():GetType()~=TYPE_SPELL+TYPE_FIELD and te:GetHandler():GetLocation()==LOCATION_SZONE
+	local c=e:GetHandler()
+	return not te:GetHandler():GetColumnGroup():IsContains(c) and te:GetHandler():GetType()~=TYPE_SPELL+TYPE_FIELD and te:GetHandler():GetLocation()==LOCATION_SZONE
 end
 function s.costchk(e, te_or_c, tp)
 	local ct=#{Duel.GetPlayerEffect(tp, id)}
