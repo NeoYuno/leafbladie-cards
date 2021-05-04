@@ -42,7 +42,6 @@ end
 function s.dicetg(e, tp, eg, ep, ev, re, r, rp, chk)
     if chk==0 then return true end
     Duel.SetChainLimit(s.chlimit)
-    e:GetHandler():RegisterFlagEffect(0, RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT, 1, 0, aux.Stringid(id, 2))
 end
 function s.chlimit(e, ep, tp)
 	return tp==ep
@@ -76,6 +75,7 @@ function s.target(e, tp, eg, ep, ev, re, r, rp, chk)
 	Duel.SetOperationInfo(0, CATEGORY_DICE, nil, 0, tp, 1)
 	Duel.SetOperationInfo(0, CATEGORY_REMOVE, g, 1, 0, 0)
     Duel.SetOperationInfo(0, CATEGORY_DESTROY, g, 1, 0, 0)
+	Duel.SetChainLimit(s.chlimit)
 end
 function s.operation(e, tp, eg, ep, ev, re, r, rp)
 	local d=Duel.TossDice(tp, 1)
