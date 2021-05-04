@@ -154,7 +154,7 @@ end
 function s.operation(e, tp, eg, ep, ev, re, r, rp)
 	local costvalue=e:GetLabel()
 	local op=Duel.SelectOption(tp, aux.Stringid(id, 3), aux.Stringid(id, 4))
-	if op==3 then
+	if op==0 then
 		local g=Duel.GetMatchingGroup(s.filter, tp, LOCATION_DECK, 0, nil, costvalue)
 		Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_ATOHAND)
 		local sg=Duel.SelectMatchingCard(tp, s.filter, tp, LOCATION_DECK, 0, 1, 1, nil, costvalue)
