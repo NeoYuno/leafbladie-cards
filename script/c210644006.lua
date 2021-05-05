@@ -13,7 +13,7 @@ function s.initial_effect(c)
 	--Spsummon
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id, 0))
-	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e2:SetCategory(CATEGORY_RELEASE+CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_HAND)
 	e2:SetCountLimit(1, id)
@@ -62,15 +62,25 @@ function s.rescon2(sg, e, tp, mg)
 end
 function s.sptg(e, tp, eg, ep, ev, re, r, rp, chk)
 	local c=e:GetHandler()
-	local g=Duel.GetFieldGroup(tp, LOCATION_MZONE, LOCATION_MZONE)
-	if chk==0 then return c:IsCanBeSpecialSummoned(e, 0, tp, false, false) and (aux.SelectUnselectGroup(g, e, tp, 1, #g, s.rescon1, 0) or aux.SelectUnselectGroup(g, e, tp, 1, #g, s.rescon2, 0)) end
+	local g1=Duel.GetFieldGroup(tp, LOCATION_MZONE, 0)
+	local g2=Duel.GetFieldGroup(tp, 0, LOCATION_MZONE)
+	if chk==0 then return aux.SelectUnselectGroup(g1, e, tp, 1, #g1, s.rescon1, 0) or aux.SelectUnselectGroup(g2, e, tp, 1, #g2, s.rescon2, 0)
+		and c:IsCanBeSpecialSummoned(e, 0, tp, false, false) end
+	local t1=aux.SelectUnselectGroup(g1, e, tp, 1, #g2, s.rescon1, 0)
+	local t2=aux.SelectUnselectGroup(g2, e, tp, 1, #g2, s.rescon2, 0)
+	local op=0
+	Duel.Hint(HINT_SELECTMSG, tp, aux.Stringid(id, 5))
+	if t1 and t2 then
+		op=Duel.SelectOption(tp, aux.Stringid(id, 6), aux.Stringid(id, 7))
+	elseif t1 then op=Duel.SelectOption(tp, aux.Stringid(id, 6))
+	else Duel.SelectOption(tp, aux.Stringid(id, 7)) op=1 end
+	e:SetLabel(op)
+	Duel.SetOperationInfo(0, CATEGORY_RELEASE, nil, 1, 0, 0)
 	Duel.SetOperationInfo(0, CATEGORY_SPECIAL_SUMMON, c, 1, 0, 0)
 end
 function s.spop(e, tp, eg, ep, ev, re, r, rp)
 	local c=e:GetHandler()
-	Duel.Hint(HINT_SELECTMSG, tp, aux.Stringid(id, 5))
-	local sel=Duel.SelectOption(tp, aux.Stringid(id, 6), aux.Stringid(id, 7))
-	if sel==0 then
+	if e:GetLabel()==0 then
 		local g=Duel.GetFieldGroup(tp, LOCATION_MZONE, 0)
 		if chk==0 then return aux.SelectUnselectGroup(g, e, tp, 1, #g, s.rescon1, 0) end
 		local rg=aux.SelectUnselectGroup(g, e, tp, 1, #g, s.rescon1, 1, tp, HINTMSG_RELEASE, s.rescon1, nil, false)
