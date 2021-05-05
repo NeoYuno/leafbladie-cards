@@ -26,13 +26,9 @@ function s.initial_effect(c)
 	aux.DoubleSnareValidity(c, LOCATION_SZONE)
 	--Activate cost
 	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_FIELD)
-	e3:SetCode(EFFECT_ACTIVATE_COST)
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e3:SetCode(EVENT_CHAIN_SOLVING)
 	e3:SetRange(LOCATION_SZONE)
-	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e3:SetTargetRange(0, 1)
-	e3:SetTarget(s.actarget)
-	e3:SetCost(s.costchk)
 	e3:SetOperation(s.costop)
 	c:RegisterEffect(e3)
 	--Act in hand
@@ -76,17 +72,12 @@ function s.disop(e, tp, eg, ep, ev, re, r, rp)
 	Duel.NegateEffect(ev)
 end
 --Activate cost
-function s.actarget(e, te, tp)
+function s.costop(e,tp,eg,ep,ev,re,r,rp)
+	if ep==tp then return end
 	local c=e:GetHandler()
-	return not te:GetHandler():GetColumnGroup():IsContains(c) and te:GetHandler():GetType()~=TYPE_SPELL+TYPE_FIELD and te:GetHandler():GetLocation()==LOCATION_SZONE
-end
-function s.costchk(e, te_or_c, tp)
-	local ct=#{Duel.GetPlayerEffect(tp, id)}
-	return Duel.CheckLPCost(tp, ct*500)
-end
-function s.costop(e, tp, eg, ep, ev, re, r, rp)
-	Duel.Hint(HINT_CARD, 0, id)
-	Duel.PayLPCost(tp, 500)
+	if not re:GetHandler():GetColumnGroup():IsContains(c) and re:IsActiveType(TYPE_SPELL+TYPE_TRAP) and re:GetActivateLocation()==LOCATION_SZONE then
+	Duel.PayLPCost(1-tp, 500)
+	end
 end
 --Act in hand
 function s.actfilter(c)
