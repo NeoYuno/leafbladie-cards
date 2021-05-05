@@ -66,6 +66,7 @@ function s.disop(e, tp, eg, ep, ev, re, r, rp)
 end
 --Activate cost
 function s.actarget(e, te, tp)
+	local c=e:GetHandler()
 	return not te:GetHandler():GetColumnGroup():IsContains(c) and te:GetHandler():IsType(TYPE_MONSTER)
 end
 function s.costchk(e, te_or_c, tp)
