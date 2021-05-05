@@ -26,7 +26,7 @@ function s.filter2(c)
     return c:GetEquipGroup():IsExists(Card.IsMask,1,nil) and c:IsControlerCanBeChanged()
 end
 function s.columnfilter(c)
-    return c:IsMask() and c:IsType(TYPE_CONTINUOUS) and c:IsFaceup()
+    return c:IsMask() and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsFaceup()
 end
 function s.filter3(c)
     return c:GetColumnGroup():IsExists(s.columnfilter,1,nil,tp) and c:IsControlerCanBeChanged()
