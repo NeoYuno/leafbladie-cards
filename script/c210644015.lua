@@ -53,6 +53,7 @@ end
 --Negate
 function s.discon(e, tp, eg, ep, ev, re, r, rp)
 	if rp==tp or not re:IsActiveType(TYPE_MONSTER) then return false end
+        local c=e:GetHandler()
 	local rc=re:GetHandler()
 	local p,loc,seq=Duel.GetChainInfo(ev, CHAININFO_TRIGGERING_CONTROLER, CHAININFO_TRIGGERING_LOCATION, CHAININFO_TRIGGERING_SEQUENCE)
 	return loc==LOCATION_MZONE and rc:GetColumnGroup():IsContains(c)
