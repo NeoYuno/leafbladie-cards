@@ -60,41 +60,45 @@ function s.rescon2(sg, e, tp, mg)
 	Duel.SetSelectedCard(sg)
 	return aux.ChkfMMZ(1)(sg, e, 1-tp, mg) and sg:CheckWithSumGreater(s.sumfilter, 3000)
 end
-function s.sptg(e, tp, eg, ep, ev, re, r, rp, chk)
-	local c=e:GetHandler()
-	local g1=Duel.GetFieldGroup(tp, LOCATION_MZONE, 0)
+function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+    local g1=Duel.GetFieldGroup(tp, LOCATION_MZONE, 0)
 	local g2=Duel.GetFieldGroup(tp, 0, LOCATION_MZONE)
-	if chk==0 then return aux.SelectUnselectGroup(g1, e, tp, 1, #g1, s.rescon1, 0) or aux.SelectUnselectGroup(g2, e, tp, 1, #g2, s.rescon2, 0)
-		and c:IsCanBeSpecialSummoned(e, 0, tp, false, false) end
-	local t1=aux.SelectUnselectGroup(g1, e, tp, 1, #g2, s.rescon1, 0)
-	local t2=aux.SelectUnselectGroup(g2, e, tp, 1, #g2, s.rescon2, 0)
-	local op=0
-	Duel.Hint(HINT_SELECTMSG, tp, aux.Stringid(id, 5))
-	if t1 and t2 then
-		op=Duel.SelectOption(tp, aux.Stringid(id, 6), aux.Stringid(id, 7))
-	elseif t1 then op=Duel.SelectOption(tp, aux.Stringid(id, 6))
-	else Duel.SelectOption(tp, aux.Stringid(id, 7)) op=1 end
-	e:SetLabel(op)
-	Duel.SetOperationInfo(0, CATEGORY_RELEASE, nil, 1, 0, 0)
-	Duel.SetOperationInfo(0, CATEGORY_SPECIAL_SUMMON, c, 1, 0, 0)
+	local b1=aux.SelectUnselectGroup(g1, e, tp, 1, #g1, s.rescon1, 0)
+	local b2=aux.SelectUnselectGroup(g2, e, tp, 1, #g2, s.rescon2, 0)
+	if chk==0 then return b1 or b2 and e:GetHandler():IsCanBeSpecialSummoned(e, 0, tp, false, false, e, tp)end
 end
-function s.spop(e, tp, eg, ep, ev, re, r, rp)
+function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if e:GetLabel()==0 then
-		local g=Duel.GetFieldGroup(tp, LOCATION_MZONE, 0)
+    local g1=Duel.GetFieldGroup(tp, LOCATION_MZONE, 0)
+	local g2=Duel.GetFieldGroup(tp, 0, LOCATION_MZONE)
+	local b1=aux.SelectUnselectGroup(g1, e, tp, 1, #g1, s.rescon1, 0)
+	local b2=aux.SelectUnselectGroup(g2, e, tp, 1, #g2, s.rescon2, 0)
+	local dtab={}
+	if b1 then
+		table.insert(dtab,aux.Stringid(id,6))
+	end
+	if b2 then
+		table.insert(dtab,aux.Stringid(id,7))
+	end
+	Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_RESOLVEEFFECT)
+	local op=Duel.SelectOption(tp,table.unpack(dtab))+1
+	if not b1 then op=2 end
+	if not b2 then op=1 end
+	if op==1 then
+        local g=Duel.GetFieldGroup(tp, LOCATION_MZONE, 0)
 		if chk==0 then return aux.SelectUnselectGroup(g, e, tp, 1, #g, s.rescon1, 0) end
 		local rg=aux.SelectUnselectGroup(g, e, tp, 1, #g, s.rescon1, 1, tp, HINTMSG_RELEASE, s.rescon1, nil, false)
 		if Duel.Release(rg, REASON_EFFECT)~=0 and c:IsRelateToEffect(e) then
 			Duel.SpecialSummon(c, 0, tp, tp, false, false, POS_FACEUP)
 		end
-	else
-		local g=Duel.GetFieldGroup(tp, 0, LOCATION_MZONE)
+    elseif op==2 then
+        local g=Duel.GetFieldGroup(tp, 0, LOCATION_MZONE)
 		if chk==0 then return aux.SelectUnselectGroup(g, e, tp, 1, #g, s.rescon2, 0) end
 		local rg=aux.SelectUnselectGroup(g, e, tp, 1, #g, s.rescon2, 1, tp, HINTMSG_RELEASE, s.rescon2, nil, false)
 		if Duel.Release(rg, REASON_EFFECT)~=0 and c:IsRelateToEffect(e) then
 			Duel.SpecialSummon(c, 0, tp, 1-tp, false, false, POS_FACEUP)
 		end
-	end
+    end
 end
 --spsummon or take damage
 function s.phcon(e, tp, eg, ep, ev, re, r, rp)
