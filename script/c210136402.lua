@@ -27,6 +27,7 @@ function s.initial_effect(c)
     e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
     e3:SetCode(EVENT_FREE_CHAIN)
     e3:SetRange(LOCATION_MZONE)
+e1:SetHintTiming(0, TIMINGS_CHECK_MONSTER_E
     e3:SetCountLimit(1, id+1)
     e3:SetTarget(s.atktg)
     e3:SetOperation(s.atkop)
