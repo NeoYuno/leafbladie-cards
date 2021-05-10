@@ -18,6 +18,7 @@ function s.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e2:SetCondition(s.atkcon)
 	e2:SetOperation(s.atkop)
 	c:RegisterEffect(e2)
     --Immune
@@ -33,6 +34,7 @@ function s.initial_effect(c)
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE)
 	e4:SetCode(EFFECT_EXTRA_ATTACK)
+	e4:SetCondition(s.atkcon)
 	e4:SetValue(s.value)
 	c:RegisterEffect(e4)
 end
@@ -65,6 +67,9 @@ function s.desop(e, tp, eg, ep, ev, re, r, rp)
 	end
 end
 --Change original ATK
+function s.atkcon(e, tp, eg, ep, ev, re, r, rp)
+	return e:GetHandler():IsSummonType(SUMMON_TYPE_FUSION)
+end
 function s.atkop(e, tp, eg, ep, ev, re, r, rp)
 	local c=e:GetHandler()
 	local g=c:GetMaterial()

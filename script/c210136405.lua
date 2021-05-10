@@ -20,10 +20,8 @@ function s.checkop(e, tp, eg, ep, ev, re, r, rp)
 	local p1=false
 	local p2=false
 	for tc in aux.Next(eg) do
-		if tc:IsType(TYPE_MONSTER) and tc:IsPreviousLocation(LOCATION_MZONE)
-			and ((tc:IsReason(REASON_BATTLE) and (tc:GetBattlePosition()&POS_FACEUP)~=0)
-			or (not tc:IsReason(REASON_BATTLE) and tc:IsPreviousPosition(POS_FACEUP)))
-			and tc:GetPreviousControler()~=tc:GetReasonPlayer() then
+		if tc:IsType(TYPE_MONSTER) and tc:IsPreviousLocation(LOCATION_MZONE) 
+		and tc:IsReason(REASON_BATTLE) and tc:GetPreviousControler()~=tc:GetReasonPlayer() then
 				if tc:GetReasonPlayer()==0 then
 					p1=true
 				else
