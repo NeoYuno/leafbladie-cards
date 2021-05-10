@@ -42,8 +42,9 @@ end
 --Steal
 function s.stealcon(e, tp, eg, ep, ev, re, r, rp)
 	local c=e:GetHandler()
-	return c:IsPreviousLocation(LOCATION_ONFIELD) and (rp==1-tp or (rp==tp and re:GetHandler():IsSetCard(0x4))) 
+	return c:IsPreviousLocation(LOCATION_ONFIELD) and (rp~=tp or (rp==tp and re:GetHandler():IsSetCard(0x4))) 
         and c:IsPreviousControler(tp) and Duel.GetFieldGroupCount(tp, 0, LOCATION_HAND)~=0
+and c:IsReason(REASON_EFFECT)
 end
 function s.stealcost(e, tp, eg, ep, ev, re, r, rp, chk)
 	if chk==0 then return Duel.CheckLPCost(tp, 1500) end
