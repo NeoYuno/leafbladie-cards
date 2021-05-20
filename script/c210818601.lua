@@ -88,7 +88,7 @@ function s.thcost(e, tp, eg, ep, ev, re, r, rp, chk)
 	Duel.RegisterEffect(e1, tp)
 end
 function s.thcon(e, tp, eg, ep, ev, re, r, rp)
-	return e:GetHandler():IsPreviousPosition(POS_FACEUP)
+	return e:GetHandler():IsPreviousPosition(POS_FACEUP) and not e:GetHandler():IsLocation(LOCATION_DECK)
 end
 function s.thfilter(c)
     return c:IsSetCard(0x64) and c:IsType(TYPE_MONSTER) and not c:IsCode(id) and c:IsAbleToHand()
