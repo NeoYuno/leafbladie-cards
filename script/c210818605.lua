@@ -35,7 +35,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
     --Disable
     local e3=Effect.CreateEffect(c)
-    e3:SetCategory(CATEGORY_DISABLE+CATEGORY_DESTROY)
+    e3:SetCategory(CATEGORY_DISABLE)
     e3:SetType(EFFECT_TYPE_QUICK_O)
     e3:SetCode(EVENT_CHAINING)
     e3:SetRange(LOCATION_MZONE)
@@ -97,16 +97,8 @@ function s.discost(e, tp, eg, ep, ev, re, r, rp, chk)
 end
 function s.distg(e, tp, eg, ep, ev, re, r, rp, chk)
 	if chk==0 then return true end
-    local g=Duel.GetMatchingGroup(aux.TRUE, tp, LOCATION_ONFIELD, LOCATION_ONFIELD, nil)
-	Duel.SetOperationInfo(0, CATEGORY_DESTROY, g, 1, 0, 0)
 	Duel.SetOperationInfo(0, CATEGORY_DISABLE, eg, 1, 0, 0)
 end
 function s.disop(e, tp, eg, ep, ev, re, r, rp)
-	if not Duel.NegateEffect(ev) then return end
-	Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_DESTROY)
-	local g=Duel.SelectMatchingCard(tp, aux.TRUE, tp, LOCATION_ONFIELD, LOCATION_ONFIELD, 1, 1, nil)
-	if #g>0 then
-		Duel.HintSelection(g)
-		Duel.Destroy(g, REASON_EFFECT)
-	end
+	Duel.NegateEffect(ev)
 end
