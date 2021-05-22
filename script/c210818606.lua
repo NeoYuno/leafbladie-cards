@@ -47,7 +47,7 @@ function s.activate(e, tp, eg, ep, ev, re, r, rp)
 	local g=Duel.GetMatchingGroup(s.eqfilter, tp, LOCATION_DECK+LOCATION_GRAVE, 0, nil, tc, tp)
 	if tc:IsFaceup() and tc:IsRelateToEffect(e) and #g>0 and ft>0 then
         if tc:IsCode(CARD_HARPIE_LADY_SISTERS) then
-            local sg=aux.SelectUnselectGroup(g, e, tp, 1, 3, false, 1, tp, HINTMSG_EQUIP)
+            local sg=aux.SelectUnselectGroup(g, e, tp, 1, math.min(ft, 3), false, 1, tp, HINTMSG_EQUIP)
             local sc=sg:GetFirst()
             for sc in aux.Next(sg) do
                 Duel.Equip(tp, sc, tc)
