@@ -86,10 +86,13 @@ function s.discon(e, tp, eg, ep, ev, re, r, rp)
 	return tg and tg:IsExists(s.tgfilter, 1, nil, tp) and Duel.IsChainDisablable(ev)
 		and aux.exccon(e, tp, eg, ep, ev, re, r, rp)
 end
+function s.filter(c)
+	return c:IsFaceup() and c:IsSetCard(0x64)
+end
 function s.discost(e, tp, eg, ep, ev, re, r, rp, chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsSetCard, tp, LOCATION_ONFIELD, 0, 1, e:GetHandler(), 0x64) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.filter, tp, LOCATION_ONFIELD, 0, 1, e:GetHandler()) end
 	Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_RTOHAND)
-	local g=Duel.SelectMatchingCard(tp, Card.IsSetCard, tp, LOCATION_ONFIELD, 0, 1, 1, e:GetHandler(), 0x64)
+	local g=Duel.SelectMatchingCard(tp, s.filter, tp, LOCATION_ONFIELD, 0, 1, 1, e:GetHandler())
 	Duel.SendtoHand(g, nil, REASON_COST)
 end
 function s.distg(e, tp, eg, ep, ev, re, r, rp, chk)
