@@ -33,13 +33,13 @@ function s.condition(e, tp, eg, ep, ev, re, r, rp)
 	local ct=Duel.GetMatchingGroupCount(s.cfilter, tp, LOCATION_MZONE, 0, nil)
 	return ct>0
 end
-function s.filter(c)
+function s.cfilter2(c)
 	return c:IsFaceup() and c:IsSetCard(0x64)
 end
 function s.target(e, tp, eg, ep, ev, re, r, rp, chk)
 	if chk==0 then
 		local ct=Duel.GetMatchingGroupCount(s.cfilter, tp, LOCATION_MZONE, 0,nil)
-		if ct<=1 then return Duel.IsExistingMatchingCard(s.filter, tp, LOCATION_MZONE, 0, 1, nil) end
+		if ct<=1 then return Duel.IsExistingMatchingCard(s.cfilter2, tp, LOCATION_MZONE, 0, 1, nil) end
 		return true
 	end
 end
@@ -67,7 +67,7 @@ function s.activate(e, tp, eg, ep, ev, re, r, rp)
         Duel.RegisterEffect(e2, tp)
 	end
 	if ct>=2 and Duel.SelectYesNo(tp, aux.Stringid(id, 1)) then
-        local g=Duel.GetMatchingGroup(s.filter, tp, LOCATION_MZONE, 0, nil)
+        local g=Duel.GetMatchingGroup(s.cfilter2, tp, LOCATION_MZONE, 0, nil)
 		local tc=g:GetFirst()
 		for tc in aux.Next(g) do
 			--Immune
