@@ -46,8 +46,9 @@ end
 function s.activate(e, tp, eg, ep, ev, re, r, rp)
 	local c=e:GetHandler()
 	local g=Duel.GetMatchingGroup(s.cfilter, tp, LOCATION_MZONE, 0, nil)
+	local b=Duel.GetMatchingGroup(s.filter, tp, LOCATION_MZONE, 0, nil)
 	local ct=#g
-	if ct>=1 and Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
+	if ct>=1 and #b>0 and Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
         local e1=Effect.CreateEffect(c)
         e1:SetType(EFFECT_TYPE_FIELD)
         e1:SetCode(EFFECT_AVOID_BATTLE_DAMAGE)
@@ -66,10 +67,9 @@ function s.activate(e, tp, eg, ep, ev, re, r, rp)
         e2:SetValue(1)
         Duel.RegisterEffect(e2, tp)
 	end
-	if ct>=2 and Duel.SelectYesNo(tp, aux.Stringid(id, 1)) then
-        local g=Duel.GetMatchingGroup(s.filter, tp, LOCATION_MZONE, 0, nil)
-		local tc=g:GetFirst()
-		for tc in aux.Next(g) do
+	if ct>=2 and #b>0 and Duel.SelectYesNo(tp, aux.Stringid(id, 1)) then
+		local tc=b:GetFirst()
+		for t1 in aux.Next(b) do
 			--Immune
 			local e3=Effect.CreateEffect(c)
 			e3:SetDescription(3110)
