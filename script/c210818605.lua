@@ -33,10 +33,11 @@ function s.initial_effect(c)
 	e2:SetRange(LOCATION_MZONE+LOCATION_GRAVE)
 	e2:SetValue(CARD_HARPIE_LADY_SISTERS)
 	c:RegisterEffect(e2)
-    --Disable
+    --Negate
     local e3=Effect.CreateEffect(c)
     e3:SetCategory(CATEGORY_NEGATE)
     e3:SetType(EFFECT_TYPE_QUICK_O)
+    e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
     e3:SetCode(EVENT_CHAINING)
     e3:SetRange(LOCATION_MZONE)
     e3:SetCountLimit(3)
@@ -77,7 +78,7 @@ end
 function s.atkcon(e)
     return e:GetHandler():IsSummonType(SUMMON_TYPE_LINK+1)
 end
---Disable
+--Negate
 function s.tgfilter(c, tp)
 	return c:IsFaceup() and c:IsLocation(LOCATION_ONFIELD) and c:IsControler(tp) and c:IsSetCard(0x64)
 end
