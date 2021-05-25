@@ -60,14 +60,14 @@ function s.spcon(e, c, sc)
     local rg1=Duel.GetMatchingGroup(s.dcfilter, tp, LOCATION_HAND, 0, nil)
     local rg2=Duel.GetMatchingGroup(s.lkfilter, tp, LOCATION_MZONE, 0, nil)
     return aux.SelectUnselectGroup(rg1, e, tp, 1, 1, nil, 0, c) and aux.SelectUnselectGroup(rg2, e, tp, 1, 1, nil, 0, c)
-        and Duel.GetLocationCountFromEx(tp, tp, c, sc)>0
+        and Duel.GetLocationCountFromEx(tp, tp, c, sc)>-1
 end
 function s.spop(e, tp, eg, ep, ev, re, r, rp, c)
     local rg1=Duel.GetMatchingGroup(s.dcfilter, tp, LOCATION_HAND, 0, nil)
     local rg2=Duel.GetMatchingGroup(s.lkfilter, tp, LOCATION_MZONE, 0, nil)
     local g1=aux.SelectUnselectGroup(rg1, e, tp, 1, 1, nil , 1, tp, HINTMSG_DISCARD, false)
     if Duel.SendtoGrave(g1, REASON_DISCARD+REASON_COST)~=0 then
-        if Duel.GetLocationCountFromEx(tp, tp, c, sc)<=0 then return false end
+        if Duel.GetLocationCountFromEx(tp, tp, c, sc)<=-1 then return false end
         local g2=aux.SelectUnselectGroup(rg2, e, tp, 1, 1, nil , 1, tp, HINTMSG_TOGRAVE, false)
         Duel.BreakEffect()
         Duel.SendtoGrave(g2, REASON_MATERIAL+REASON_LINK)
