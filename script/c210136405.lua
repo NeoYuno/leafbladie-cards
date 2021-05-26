@@ -2,7 +2,7 @@
 local s,id=GetID()
 function s.initial_effect(c)
 	--Activate
-	local e1=Fusion.CreateSummonEff{handler=c, aux.FilterBoolFunction(Card.IsSetCard,0x4), extraop=s.extraop, stage2=s.stage2, matfilter=s.matfil, extrafil=s.fextra, extratg=s.extratg}
+	local e1=Fusion.CreateSummonEff{handler=c, aux.FilterBoolFunction(Card.IsSetCard,0x4), extraop=s.extraop, stage2=s.stage2, extrafil=s.fextra}
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON+CATEGORY_DESTROY)
 	e1:SetCountLimit(1, id, EFFECT_COUNT_CODE_OATH)
 	e1:SetHintTiming(0, TIMINGS_CHECK_MONSTER_E)
@@ -33,17 +33,6 @@ function s.checkop(e, tp, eg, ep, ev, re, r, rp)
 	if p2 then Duel.RegisterFlagEffect(1, id, RESET_PHASE+PHASE_END, 0, 1) end
 end
 s.listed_series={0x4}
-function s.matfil(c, e, tp, chk)
-	return (c:IsOnField() or c:IsLocation(LOCATION_HAND)) and c:IsDestructable(e) and not c:IsImmuneToEffect(e)
-end
-function s.extratg(e,tp,eg,ep,ev,re,r,rp,chk)
-	Duel.SetOperationInfo(0, CATEGORY_DESTROY, nil, 1, tp, LOCATION_ONFIELD)
-end
-function s.extraop(e, tc, tp, sg)
-	local res=Duel.Destroy(sg,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)==#sg
-	sg:Clear()
-	return res
-end
 function s.filterchk(c)
 	return c:IsSetCard(0x4) and c:IsDestructable()
 end
@@ -61,11 +50,20 @@ function s.fextra(e, tp, mg)
 	end
 	return nil
 end
+function s.extraop(e, tc, tp, sg)
+	local rg=sg:Filter(Card.IsLocation, nil, LOCATION_DECK)
+	if #rg>0 then
+		Duel.Destroy(rg, REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
+		sg:Sub(rg)
+	end
+end
 function s.stage2(e, tc, tp, sg, chk)
 	if chk==1 then
         --Cannot be destroyed by battle or card effects
 		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetDescription(3008)
 		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetProperty(EFFECT_FLAG_CLIENT_HINT)
 		e1:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
         e1:SetValue(1)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
