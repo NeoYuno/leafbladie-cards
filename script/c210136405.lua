@@ -2,7 +2,7 @@
 local s,id=GetID()
 function s.initial_effect(c)
 	--Activate
-	local e1=Fusion.CreateSummonEff{handler=c, aux.FilterBoolFunction(Card.IsSetCard,0x4), extraop=s.extraop, stage2=s.stage2, extrafil=s.fextra}
+	local e1=Fusion.CreateSummonEff{handler=c, aux.FilterBoolFunction(Card.IsSetCard,0x4), matfilter=Fusion.OnFieldMat, extraop=s.extraop, stage2=s.stage2, extrafil=s.fextra}
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON+CATEGORY_DESTROY)
 	e1:SetCountLimit(1, id, EFFECT_COUNT_CODE_OATH)
 	e1:SetHintTiming(0, TIMINGS_CHECK_MONSTER_E)
@@ -43,7 +43,7 @@ function s.fcheck(tp, sg, fc)
 end
 function s.fextra(e, tp, mg)
 	if Duel.GetFlagEffect(tp, id)~=0 then
-		local eg=Duel.GetMatchingGroup(Fusion.IsMonsterFilter(s.filterchk), tp, LOCATION_DECK, 0, nil)
+		local eg=Duel.GetMatchingGroup(Fusion.IsMonsterFilter(s.filterchk), tp, LOCATION_HAND+LOCATION_DECK, 0, nil)
 		if eg and #eg>0 then
 			return eg, s.fcheck
 		end
@@ -51,7 +51,7 @@ function s.fextra(e, tp, mg)
 	return nil
 end
 function s.extraop(e, tc, tp, sg)
-	local rg=sg:Filter(Card.IsLocation, nil, LOCATION_DECK)
+	local rg=sg:Filter(Card.IsLocation, nil, LOCATION_HAND+LOCATION_DECK)
 	if #rg>0 then
 		Duel.Destroy(rg, REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
 		sg:Sub(rg)
