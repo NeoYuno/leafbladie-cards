@@ -57,13 +57,15 @@ function s.eqop(e, tp, eg, ep, ev, re, r, rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if c:IsRelateToEffect(e) and tc and tc:IsRelateToEffect(e) and tc:IsFaceup() and c:CheckUniqueOnField(tp) then
-		if Duel.Equip(tp, c, tc) and Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
+		if Duel.Equip(tp, c, tc) then
             local g=Duel.GetMatchingGroup(s.spfilter, tp, LOCATION_HAND+LOCATION_GRAVE, 0, nil, e, tp)
-            Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_SPSUMMON)
-            local sg=g:Select(tp, 1, 1, nil)
-            if #sg>0 then
-                Duel.SpecialSummon(sg, 0, tp, tp, false, false, POS_FACEUP)
-            end
+			if #g>0 and Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
+				Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_SPSUMMON)
+				local sg=g:Select(tp, 1, 1, nil)
+				if #sg>0 then
+					Duel.SpecialSummon(sg, 0, tp, tp, false, false, POS_FACEUP)
+				end
+			end
         end
 	end
 end
