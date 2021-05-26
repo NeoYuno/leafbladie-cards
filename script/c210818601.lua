@@ -64,12 +64,14 @@ end
 function s.spop(e, tp, eg, ep, ev, re, r, rp)
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) then return end
-    if Duel.SpecialSummon(c, 0, tp, tp, false, false, POS_FACEUP)~=0 and Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
+    if Duel.SpecialSummon(c, 0, tp, tp, false, false, POS_FACEUP)~=0 then
         local g=Duel.GetMatchingGroup(Card.IsCode, tp, LOCATION_DECK+LOCATION_GRAVE, 0, nil, 90219263)
-        Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_ATOHAND)
-		local sg=g:Select(tp, 1, 1, nil)
-		Duel.SendtoHand(sg, tp, REASON_EFFECT)
-		Duel.ConfirmCards(1-tp, sg)
+		if #g>0 and Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
+			Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_ATOHAND)
+			local sg=g:Select(tp, 1, 1, nil)
+			Duel.SendtoHand(sg, tp, REASON_EFFECT)
+			Duel.ConfirmCards(1-tp, sg)
+		end
     end
 end
 --Search
