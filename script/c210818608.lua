@@ -51,10 +51,10 @@ function s.eqop(e, tp, eg, ep, ev, re, r, rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if c:IsRelateToEffect(e) and tc and tc:IsRelateToEffect(e) and tc:IsFaceup() and c:CheckUniqueOnField(tp) then
-		if Duel.Equip(tp, c, tc) and Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
+		if Duel.Equip(tp, c, tc) then
             Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_DESTROY)
             local g=Duel.SelectMatchingCard(tp, aux.TRUE, tp, LOCATION_ONFIELD, LOCATION_ONFIELD, 1, 1, nil)
-            if #g>0 then
+            if #g>0 and Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
                 Duel.HintSelection(g)
                 Duel.Destroy(g, REASON_EFFECT)
             end
