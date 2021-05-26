@@ -7,6 +7,7 @@ function s.initial_effect(c)
 	Link.AddProcedure(c, aux.FilterBoolFunctionEx(Card.IsAttribute, ATTRIBUTE_WIND), 2)
     --Special summon
     local e0=Effect.CreateEffect(c)
+    e0:SetDescription(aux.Stringid(id, 0))
     e0:SetType(EFFECT_TYPE_FIELD)
     e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
     e0:SetCode(EFFECT_SPSUMMON_PROC)
@@ -102,7 +103,7 @@ function s.distg(e, tp, eg, ep, ev, re, r, rp, chk)
 	Duel.SetOperationInfo(0, CATEGORY_NEGATE, eg, 1, 0, 0)
 end
 function s.disop(e, tp, eg, ep, ev, re, r, rp)
-    if Duel.NegateActivation(ev) and Duel.SelectYesNo(tp, aux.Stringid(id, 0)) then
+    if Duel.NegateActivation(ev) and Duel.SelectYesNo(tp, aux.Stringid(id, 1)) then
         Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_DESTROY)
         local g=Duel.SelectMatchingCard(tp, aux.TRUE, tp, LOCATION_ONFIELD, LOCATION_ONFIELD, 1, 1, nil)
         if #g>0 then

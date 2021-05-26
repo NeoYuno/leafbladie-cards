@@ -40,36 +40,37 @@ function s.spfilter(c, lv, e, tp)
 end
 function s.destg(e, tp, eg, ep, ev, re, r, rp, chk)
     local c=e:GetHandler()
-    local zone={}
+	local zone={}
 	zone[0]=c:GetLinkedZone(0)
 	zone[1]=c:GetLinkedZone(1)
-    if chk==0 then return (Duel.GetLocationCount(tp, LOCATION_MZONE, LOCATION_REASON_TOFIELD, zone[tp])>0
-        or Duel.GetLocationCount(1-tp, LOCATION_MZONE, LOCATION_REASON_TOFIELD, zone[1-tp])>0)
+    if chk==0 then return (Duel.GetLocationCount(tp, LOCATION_MZONE, tp, LOCATION_REASON_TOFIELD, zone[tp])>0
+		or Duel.GetLocationCount(1-tp, LOCATION_MZONE, tp, LOCATION_REASON_TOFIELD, zone[1-tp])>0)
         and Duel.IsExistingMatchingCard(s.desfilter, tp, LOCATION_HAND+LOCATION_MZONE, 0, 1, nil, e, tp) end
     Duel.SetOperationInfo(0, CATEGORY_DESTROY, nil, 1, tp, LOCATION_HAND+LOCATION_MZONE)
     Duel.SetOperationInfo(0, CATEGORY_SPECIAL_SUMMON, nil, 1, tp, LOCATION_GRAVE)
 end
 function s.desop(e, tp, eg, ep, ev, re, r, rp)
     local c=e:GetHandler()
-    local zone={}
+	local zone={}
 	zone[0]=c:GetLinkedZone(0)
 	zone[1]=c:GetLinkedZone(1)
     Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_DESTROY)
     local tc=Duel.SelectMatchingCard(tp, s.desfilter, tp, LOCATION_HAND+LOCATION_MZONE, 0, 1, 1, nil, e, tp):GetFirst()
     if tc and Duel.Destroy(tc, REASON_EFFECT)~=0 then
-        if Duel.GetLocationCount(tp, LOCATION_MZONE, LOCATION_REASON_TOFIELD, zone[tp])<=0 
-        and Duel.GetLocationCount(1-tp, LOCATION_MZONE, LOCATION_REASON_TOFIELD, zone[1-tp])<=0 then return end
         Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_SPSUMMON)
+        local ft1=Duel.GetLocationCount(tp, LOCATION_MZONE, tp, LOCATION_REASON_TOFIELD, zone[tp])
+        local ft2=Duel.GetLocationCount(1-tp, LOCATION_MZONE, tp, LOCATION_REASON_TOFIELD, zone[1-tp])
         local g=Duel.SelectMatchingCard(tp, aux.NecroValleyFilter(s.spfilter), tp, LOCATION_GRAVE, LOCATION_GRAVE, 1, 1, nil, tc:GetLevel(), e, tp)
+        if #g==0 or (ft1==0 and ft2==0) then return end
         local sg=g:GetFirst()
-        if sg then
-            local sump=1-tp
-            if sg:IsCanBeSpecialSummoned(e, 0, tp, false, false, POS_FACEUP, tp, zone[tp])
-                and (not sg:IsCanBeSpecialSummoned(e, 0, tp, false, false, POS_FACEUP, tp, zone[1-tp]) or Duel.SelectYesNo(tp, aux.Stringid(id, 0))) then
-                sump=tp
-            end
-            Duel.SpecialSummon(sg, 0, tp, sump, false, false, POS_FACEUP, zone[sump])
-        end
+        local s1=ft1>0 and sg:IsCanBeSpecialSummoned(e, 0, tp, false, false)
+        local s2=ft2>0 and sg:IsCanBeSpecialSummoned(e, 0, tp, false, false, POS_FACEUP, 1-tp)
+        if s1 and s2 then op=Duel.SelectOption(tp, aux.Stringid(id, 0), aux.Stringid(id, 1))
+        elseif s1 then op=Duel.SelectOption(tp, aux.Stringid(id, 0))
+        elseif s2 then op=Duel.SelectOption(tp, aux.Stringid(id, 1))+1
+        else op=2 end
+        if op==0 then Duel.SpecialSummon(sg, 0, tp, tp, false, false, POS_FACEUP, zone[tp])
+        elseif op==1 then Duel.SpecialSummon(sg, 0, tp, 1-tp, false, false, POS_FACEUP, zone[1-tp]) end
     end
 end
 --Switch ATK
