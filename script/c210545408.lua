@@ -23,7 +23,7 @@ function s.ritualfil(c)
 	return c:IsSetCard(0xb4) and c:IsRitualMonster()
 end
 function s.mfilter(c)
-	return c:IsSetCard(0xde) or c:IsSetCard(0x40) and c:HasLevel()  and c:IsAbleToGraveAsCost()
+	return (c:IsSetCard(0xde) and c:HasLevel()) or (c:IsSetCard(0x40) and c:HasLevel()) and c:IsAbleToGraveAsCost()
 end
 function s.extrafil(e, tp, eg, ep, ev, re, r, rp, chk)
 	return Duel.GetMatchingGroup(s.mfilter, tp, LOCATION_DECK, 0, nil)
