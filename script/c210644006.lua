@@ -65,7 +65,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g2=Duel.GetFieldGroup(tp, 0, LOCATION_MZONE)
 	local b1=aux.SelectUnselectGroup(g1, e, tp, 1, #g1, s.rescon1, 0)
 	local b2=aux.SelectUnselectGroup(g2, e, tp, 1, #g2, s.rescon2, 0)
-	if chk==0 then return b1 or b2 and e:GetHandler():IsCanBeSpecialSummoned(e, 0, tp, false, false, e, tp)end
+	if chk==0 then return b1 or b2 and e:GetHandler():IsCanBeSpecialSummoned(e, 0, tp, false, false, e, tp) end
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
