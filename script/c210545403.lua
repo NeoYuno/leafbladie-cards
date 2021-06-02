@@ -23,23 +23,15 @@ function s.initial_effect(c)
 	e2:SetCost(s.setcost)
 	e2:SetOperation(s.setop)
 	c:RegisterEffect(e2)
-	--Alternate synchro summon
+	--Synchro summon
 	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_FIELD)
-	e3:SetProperty(EFFECT_FLAG_UNCOPYABLE)
-	e3:SetCode(EFFECT_SPSUMMON_PROC)
-	e3:SetRange(LOCATION_EXTRA)
-	e3:SetCondition(s.sprcon)
-	--e3:SetTarget(s.sprtg)
-	e3:SetOperation(s.sprop)
-	e3:SetValue(SUMMON_TYPE_SYNCHRO)
-	local e4=Effect.CreateEffect(c)
-	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_GRANT)
-	e4:SetRange(LOCATION_MZONE)
-	e4:SetTargetRange(LOCATION_EXTRA, 0)
-	e4:SetTarget(s.eftg)
-	e4:SetLabelObject(e3)
-	c:RegisterEffect(e4)
+	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e3:SetType(EFFECT_TYPE_IGNITION)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetCountLimit(1, id)
+	e3:SetTarget(s.syntg)
+	e3:SetOperation(s.synop)
+	c:RegisterEffect(e3)
 end
 s.listed_names={64043465}
 s.listed_series={0x40}
@@ -93,52 +85,42 @@ function s.setop(e, tp, eg, ep, ev, re, r, rp)
 		Duel.SSet(tp, g:GetFirst())
 	end
 end
---Alternate synchro summon
-function s.eftg(e, c)
-	local tp=c:GetControler()
-	local mg=Duel.GetMatchingGroup(s.filter1, tp, LOCATION_MZONE, 0, nil)
-	local tuner=mg:GetFirst()
-	local rg=Duel.GetMatchingGroup(s.filter2, tp, 0xff, 0, tuner)
-	return c:IsType(TYPE_SYNCHRO) and c:IsSynchroSummonable(nil, mg+rg)
+--Synchro summon
+function s.mgfilter(c)
+	return (c:IsLocation(LOCATION_MZONE) and c:IsFaceup() and not c:IsType(TYPE_TUNER) and c:GetLevel()~=0)
+		or (c:IsLocation(LOCATION_DECK) and c:IsSetCard(0x40))
 end
-function s.rescon(tuner, c)
-	return	function(sg, e, tp, mg)
-				sg:AddCard(tuner)
-				local res=Duel.GetLocationCountFromEx(tp, tp, sg, c)>0 
-					and sg:CheckWithSumEqual(Card.GetLevel, c:GetLevel(), #sg, #sg)
-					and sg:GetClassCount(function(c) return c:GetLocation()&~(LOCATION_MZONE) end)==2
-				sg:RemoveCard(tuner)
-				return res
+function s.spfilter1(c, e, tp, lv)
+	return Duel.GetLocationCountFromEx(tp, tp, sg, c) and c:IsType(TYPE_SYNCHRO) and c:IsLevel(lv) and c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_SYNCHRO, tp, false, false)
+end
+function s.rescon(sg, e, tp, mg)
+	local lv=sg:GetSum(Card.GetOriginalLevel)+e:GetHandler():GetOriginalLevel()
+	return sg:FilterCount(Card.IsLocation, nil, LOCATION_DECK)<=1
+		and Duel.IsExistingMatchingCard(s.spfilter1, tp, LOCATION_EXTRA, 0, 1, nil, e, tp, lv)
+end
+function s.syntg(e, tp, eg, ep, ev, re, r, rp, chk)
+	local mg=Duel.GetMatchingGroup(s.mgfilter, tp, LOCATION_DECK+LOCATION_MZONE, 0, nil)
+	if chk==0 then return aux.SelectUnselectGroup(mg, e, tp, 1, 99, s.rescon, 0) end
+	Duel.SetOperationInfo(0, CATEGORY_SPECIAL_SUMMON, nil, 1, tp, LOCATION_EXTRA)
+end
+function s.spfilter2(c, e, tp, lv)
+	return c:IsType(TYPE_SYNCHRO) and c:IsLevel(lv) and c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_SYNCHRO, tp, false, false)
+end
+function s.synop(e, tp, eg, ep, ev, re, r, rp)
+	local mg=Duel.GetMatchingGroup(s.mgfilter, tp, LOCATION_DECK+LOCATION_MZONE, 0, nil)
+	if aux.SelectUnselectGroup(mg, e, tp, 1, 99, s.rescon, 0) then
+		local sg=aux.SelectUnselectGroup(mg, e, tp, 1, 99, s.rescon, 1, tp, HINTMSG_TOGRAVE)
+		sg:AddCard(e:GetHandler())
+		if Duel.SendtoGrave(sg, REASON_EFFECT)>0 then
+			local syg=sg:Filter(Card.IsLocation, nil, LOCATION_GRAVE)
+			local lv=syg:GetSum(Card.GetOriginalLevel)
+			Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_SPSUMMON)
+			local ssg=Duel.SelectMatchingCard(tp, s.spfilter2, tp, LOCATION_EXTRA, 0, 1, 1, nil, e, tp, lv)
+			local sc=ssg:GetFirst()
+			if sc then
+				Duel.SpecialSummon(sc, SUMMON_TYPE_SYNCHRO, tp, tp, false, false, POS_FACEUP)
+				sc:CompleteProcedure()
 			end
-end
-function s.filter1(c)
-	return c:IsCode(id) and c:IsType(TYPE_TUNER) and c:IsAbleToGraveAsCost()
-end
-function s.filter2(c)
-	return (c:IsFaceup() and c:HasLevel() and not c:IsType(TYPE_TUNER) and c:IsAbleToGraveAsCost() and c:IsLocation(LOCATION_MZONE))
-	    or (c:HasLevel() and c:IsSetCard(0x40) and c:IsAbleToGraveAsCost() and c:IsLocation(LOCATION_DECK))
-
-end
-function s.sprcon(e, c)
-	if c==nil then return true end
-	local tp=c:GetControler()
-	local g=Duel.GetMatchingGroup(s.filter1, tp, LOCATION_MZONE, 0, nil)
-	local tuner=g:GetFirst()
-	local rg=Duel.GetMatchingGroup(s.filter2, tp, 0xff, 0, tuner)
-	return #g>0 and aux.SelectUnselectGroup(rg, e, tp, nil, nil, s.rescon(tuner, c), 0)
-end
-function s.sprop(e, tp, eg, ep, ev, re, r, rp, c)
-	local pg=aux.GetMustBeMaterialGroup(tp, Group.CreateGroup(), tp, nil, nil, REASON_SYNCHRO)
-	if #pg>0 then return end
-	Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_SMATERIAL)
-	local g=Duel.SelectMatchingCard(tp, s.filter1, tp, LOCATION_MZONE, 0, 1, 1, nil)
-	local tuner=g:GetFirst()
-	local rg=Duel.GetMatchingGroup(s.filter2, tp, 0xff, 0, tuner)
-	if #g>0 and #rg>0 then
-		local sg=aux.SelectUnselectGroup(rg, e, tp, nil, nil, s.rescon(tuner, c), 1, tp, HINTMSG_SMATERIAL, s.rescon(tuner, c), s.rescon(tuner, c))
-		if #sg>0 then
-			sg:AddCard(tuner)
-			Duel.SendtoGrave(sg, REASON_COST+REASON_MATERIAL+REASON_SYNCHRO)
 		end
 	end
 end
