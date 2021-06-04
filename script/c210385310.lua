@@ -58,12 +58,15 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.filter),tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,e,tp):GetFirst()
 	if tc and Duel.SpecialSummon(tc,0,tp,tp,true,true,POS_FACEUP) ~= 0 then
 		tc:CompleteProcedure()
-    tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1)
+		local fid=e:GetHandler():GetFieldID()
+    tc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,EFFECT_FLAG_CLIENT_HINT,1,fid,aux.Stringid(id,1))
 		--Destroy it during the End Phase
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e1:SetDescription(1100) -- Destroy Monster
 		e1:SetCode(EVENT_PHASE+PHASE_END)
 		e1:SetCountLimit(1)
+		e1:SetLabel(fid)
 		e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
 		e1:SetLabelObject(tc)
 		e1:SetCondition(s.descon)
@@ -73,7 +76,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetLabelObject()
-	if tc:GetFlagEffect(id)~=0 then
+	if tc:GetFlagEffectLabel(id)==e:GetLabel() then
 		return true
 	else
 		e:Reset()

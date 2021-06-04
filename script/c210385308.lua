@@ -84,7 +84,6 @@ end
 function s.firetg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
   if chkc then return c:IsFaceup() and c:IsLocation(LOCATION_MZONE) end
   if chk == 0 then return Duel.IsExistingTarget(s.firefil,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
-
   Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
   local tg=Duel.SelectTarget(tp,s.firefil,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
 end

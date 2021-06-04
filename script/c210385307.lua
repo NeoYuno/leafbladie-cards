@@ -111,7 +111,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
   -- 2: Water Dragon attack all opp. monsters.
 	if (sel&2)~=0 then
-    local e1=Effect.CreateEffect(e:GetHandler())
+    local e1=Effect.CreateEffect(c)
   	e1:SetType(EFFECT_TYPE_FIELD)
   	e1:SetCode(EFFECT_ATTACK_ALL)
   	e1:SetTargetRange(LOCATION_MZONE,0)
@@ -119,10 +119,11 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
   	e1:SetValue(1)
 		e1:SetReset(RESET_PHASE+PHASE_END)
   	Duel.RegisterEffect(e1,tp)
+    aux.RegisterClientHint(c,0,tp,1,0,aux.Stringid(id,1))
 	end
   -- 3: Water Dragon unaffected
 	if (sel&4)~=0 then
-    local e2=Effect.CreateEffect(e:GetHandler())
+    local e2=Effect.CreateEffect(c)
   	e2:SetType(EFFECT_TYPE_FIELD)
   	e2:SetCode(EFFECT_IMMUNE_EFFECT)
   	e2:SetTargetRange(LOCATION_MZONE,0)
@@ -130,7 +131,9 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
   	e2:SetValue(s.immfilter)
 		e2:SetReset(RESET_PHASE+PHASE_END)
   	Duel.RegisterEffect(e2,tp)
+    aux.RegisterClientHint(c,0,tp,1,0,aux.Stringid(id,2))
 	end
+  -- Opponent's monsters become Fire Pyro.
   if (sel&8)~=0 then
     local e3=Effect.CreateEffect(c)
     e3:SetType(EFFECT_TYPE_FIELD)

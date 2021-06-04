@@ -89,6 +89,6 @@ function s.gyop(e,tp,eg,ep,ev,re,r,rp)
 			return tc:IsCanBeSpecialSummoned(e,0,tp,false,false) and ft>0 end,
 		function(c)
 			Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP) end,
-		aux.Stringid(id,1)) -- Special Summon
+		1075) -- Special Summon
 	end
 end

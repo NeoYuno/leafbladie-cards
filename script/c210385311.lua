@@ -82,6 +82,7 @@ function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.spfilter(c,e,tp,att)
   return c:IsAttribute(ATTRIBUTE_EARTH+ATTRIBUTE_WATER+ATTRIBUTE_FIRE+ATTRIBUTE_WIND)
+    and c:IsRace(RACE_DINOSAUR)
     and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
     and (not att or not c:IsAttribute(att))
 end
@@ -98,7 +99,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
   local att=e:GetLabel()
   local sg=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp,att)
   if #sg>0 then
-    Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
+    Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
   end
 end
 
