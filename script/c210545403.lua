@@ -87,8 +87,7 @@ function s.setop(e, tp, eg, ep, ev, re, r, rp)
 end
 --Synchro summon
 function s.mgfilter(c)
-	return (c:IsLocation(LOCATION_MZONE) and c:IsFaceup() and not c:IsType(TYPE_TUNER) and c:GetLevel()~=0)
-		or (c:IsLocation(LOCATION_DECK) and c:IsSetCard(0x40))
+	return c:IsLocation(LOCATION_DECK) and c:IsSetCard(0x40)
 end
 function s.spfilter1(c, e, tp, lv)
 	return Duel.GetLocationCountFromEx(tp, tp, sg, c) and c:IsType(TYPE_SYNCHRO) and c:IsLevel(lv) and c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_SYNCHRO, tp, false, false)
@@ -99,17 +98,17 @@ function s.rescon(sg, e, tp, mg)
 		and Duel.IsExistingMatchingCard(s.spfilter1, tp, LOCATION_EXTRA, 0, 1, nil, e, tp, lv)
 end
 function s.syntg(e, tp, eg, ep, ev, re, r, rp, chk)
-	local mg=Duel.GetMatchingGroup(s.mgfilter, tp, LOCATION_DECK+LOCATION_MZONE, 0, nil)
-	if chk==0 then return aux.SelectUnselectGroup(mg, e, tp, 1, 99, s.rescon, 0) end
+	local mg=Duel.GetMatchingGroup(s.mgfilter, tp, LOCATION_DECK, 0, nil)
+	if chk==0 then return aux.SelectUnselectGroup(mg, e, tp, 1, 1, s.rescon, 0) end
 	Duel.SetOperationInfo(0, CATEGORY_SPECIAL_SUMMON, nil, 1, tp, LOCATION_EXTRA)
 end
 function s.spfilter2(c, e, tp, lv)
 	return c:IsType(TYPE_SYNCHRO) and c:IsLevel(lv) and c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_SYNCHRO, tp, false, false)
 end
 function s.synop(e, tp, eg, ep, ev, re, r, rp)
-	local mg=Duel.GetMatchingGroup(s.mgfilter, tp, LOCATION_DECK+LOCATION_MZONE, 0, nil)
-	if aux.SelectUnselectGroup(mg, e, tp, 1, 99, s.rescon, 0) then
-		local sg=aux.SelectUnselectGroup(mg, e, tp, 1, 99, s.rescon, 1, tp, HINTMSG_TOGRAVE)
+	local mg=Duel.GetMatchingGroup(s.mgfilter, tp, LOCATION_DECK, 0, nil)
+	if aux.SelectUnselectGroup(mg, e, tp, 1, 1, s.rescon, 0) then
+		local sg=aux.SelectUnselectGroup(mg, e, tp, 1, 1, s.rescon, 1, tp, HINTMSG_TOGRAVE)
 		sg:AddCard(e:GetHandler())
 		if Duel.SendtoGrave(sg, REASON_EFFECT)>0 then
 			local syg=sg:Filter(Card.IsLocation, nil, LOCATION_GRAVE)
