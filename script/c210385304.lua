@@ -56,8 +56,6 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
   local ct=Duel.Destroy(desg,REASON_EFFECT)
   if ct>0 then
     Duel.Damage(1-tp,ct*800,REASON_EFFECT,true)
-    Duel.Damage(tp,ct*800,REASON_EFFECT,true)
-    Duel.RDComplete()
   end
 end
 -- Special Summon Carbo/Oxy.
@@ -80,16 +78,12 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if ft<3 or Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) then return end
   if not Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.spfilter),tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE,0,1,nil,e,tp,CARD_CARBONEDDON)
-   or not Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.spfilter),tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE,0,2,nil,e,tp,CARD_OXYGEDDON)
-  then return end
+   or not Duel.IsExistingMatchingCard(aux.NecroValleyFilter(s.spfilter),tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE,0,2,nil,e,tp,CARD_OXYGEDDON) then return end
 
   -- select the monsters to summon.
   Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-  local g1=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE,0,1,1,e,tp,CARD_CARBONEDDON)
-  local g2=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE,0,2,2,e,tp,CARD_OXYGEDDON)
+  local g1=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,e,tp,CARD_CARBONEDDON)
+  local g2=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE,0,2,2,nil,e,tp,CARD_OXYGEDDON)
   g1:Merge(g2)
-
-  if #g1 == 3 then
-    Duel.SpecialSummon(g1,0,tp,tp,false,false,POS_FACEUP)
-  end
+  Duel.SpecialSummon(g1,0,tp,tp,false,false,POS_FACEUP)
 end

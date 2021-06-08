@@ -11,7 +11,6 @@ function Chemical.CheckChemistEff(c)
   for _,eff in ipairs({c:GetCardEffect(CARD_LEGENDARY_CHEMIST)}) do
     if eff:IsHasProperty(EFFECT_FLAG_CANNOT_DISABLE) or not c:IsDisabled() then
       local val=eff:GetValue()
-      Debug.Message(type(val))
       if type(val)=="number" and val==1 then return true end
       if type(val)=="function" and val(eff,c) then return true end
     end

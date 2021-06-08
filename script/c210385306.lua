@@ -66,9 +66,6 @@ end
 function s.costfil(c)
 	-- shuffles as cost, so also affected by chemist.
 	local e=c:IsHasEffect(CARD_LEGENDARY_CHEMIST) -- const from utility.
-	--Debug.Message("----")
-	--Debug.Message(c:GetCode())
-	--Debug.Message(e)
   return (c:IsRace(RACE_DINOSAUR) or (e~=nil and not e:GetHandler():IsDisabled())) and c:IsAbleToDeckAsCost()
 end
 function s.gycost(e,tp,eg,ep,ev,re,r,rp,chk)
