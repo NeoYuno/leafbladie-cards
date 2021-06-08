@@ -48,7 +48,7 @@ function s.thcost(e, tp, eg, ep, ev, re, r, rp, chk)
   Duel.SendtoGrave(g, REASON_COST)
 end
 function s.thfilter(c)
-	return (c:IsLevel(8) and c:IsRitualMonster() and c:IsAbleToHand()) or (aux.IsCodeListed(c, CARD_BLUEEYES_W_DRAGON) or aux.IsCodeListed(c, 23995346)
+	return (c:IsLevel(8) and c:IsRitualMonster() and c:IsAbleToHand()) or ((aux.IsCodeListed(c, CARD_BLUEEYES_W_DRAGON) or aux.IsCodeListed(c, 23995346))
   and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand())
 end
 function s.thtg(e, tp, eg, ep, ev, re, r, rp, chk)

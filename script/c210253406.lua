@@ -41,7 +41,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=Duel.GetMatchingGroup(s.tdfilter,tp,LOCATION_GRAVE,0,nil)
 	Duel.SendtoDeck(g, nil, SEQ_DECKSHUFFLE, REASON_COST)
   local dg=Duel.GetOperatedGroup()
-  local ct=dg:FilterCount(Card.IsCode, nil, CARD_BLUEEYES_W_DRAGON)
+  local ct=dg:FilterCount(Card.GetPreviousCodeOnField, nil, CARD_BLUEEYES_W_DRAGON)
   if ct>=1 then
     -- atk for each dragon in your GY
     local e1=Effect.CreateEffect(c)
