@@ -55,7 +55,7 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
   local desg=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_MZONE,LOCATION_MZONE,e:GetHandler())
   local ct=Duel.Destroy(desg,REASON_EFFECT)
   if ct>0 then
-    Duel.Damage(1-tp,ct*800,REASON_EFFECT,true)
+    Duel.Damage(1-tp,ct*800,REASON_EFFECT)
   end
 end
 -- Special Summon Carbo/Oxy.

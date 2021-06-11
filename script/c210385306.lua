@@ -27,7 +27,7 @@ function s.initial_effect(c)
   e2:SetOperation(s.gyop)
   c:RegisterEffect(e2)
 end
-s.listed_names={CARD_OXYGEDDON,CARD_FIRE_DRAGON,CARD_OXYGEDDON}
+s.listed_names={CARD_CARBONEDDON,CARD_FIRE_DRAGON,CARD_OXYGEDDON}
 
 function s.spcheck(sg,tp)
 	return aux.ReleaseCheckMMZ(sg,tp) and sg:IsExists(s.chk,1,nil,sg)

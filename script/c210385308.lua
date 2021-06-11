@@ -105,7 +105,7 @@ end
 
 -- Add Chemist or monster
 function s.thfilter(c,gyc)
-  return (c:IsCode(CARD_LEGENDARY_CHEMIST) or aux.IsCodeListed(gyc,c:GetOriginalCode()))
+  return (c:IsCode(CARD_LEGENDARY_CHEMIST) or aux.IsCodeListed(gyc,c:GetCode()))
     and (c:IsAbleToHand() or c:IsAbleToGrave())
 end
 function s.costfil(c,tp)
