@@ -30,7 +30,7 @@ function s.initial_effect(c)
   e2:SetOperation(s.gyop)
   c:RegisterEffect(e2)
 end
-s.listed_names={CARD_OXYGEDDON,CARD_FIRE_DRAGON,CARD_OXYGEDDON}
+s.listed_names={CARD_CARBONEDDON,CARD_FIRE_DRAGON,CARD_OXYGEDDON}
 function s.cfilter(c,tp)
 	return aux.IsCodeOrChemist(c,CARD_CARBONEDDON) and c:IsAbleToDeckAsCost()
 		and Duel.IsExistingMatchingCard(s.oxyfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,2,c)
