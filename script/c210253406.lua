@@ -24,7 +24,7 @@ s.listed_names = {CARD_BLUEEYES_W_DRAGON}
 -- Special Summon
 -- Filter Blue-Eyes
 function s.tdfilter(c)
-  return c:IsType(TYPE_MONSTER) and c:IsSetCard(0xdd) and c:IsAbleToDeckAsCost()
+  return c:IsType(TYPE_MONSTER) and c:IsSetCard(0xdd) and c:IsAbleToDeckOrExtraAsCost()
 end
 
 -- Check if enough cards exist and an MZONE space would be free.
