@@ -12,38 +12,36 @@ function s.initial_effect(c)
   e1:SetValue(CARD_HYDROGEDDON)
   c:RegisterEffect(e1)
 
-  --aclimit when battling
+  -- unaffected
   local e2=Effect.CreateEffect(c)
   e2:SetType(EFFECT_TYPE_FIELD)
-  e2:SetCode(EFFECT_CANNOT_ACTIVATE)
+  e2:SetCode(EFFECT_IMMUNE_EFFECT)
   e2:SetRange(LOCATION_MZONE)
-  e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-  e2:SetTargetRange(0,1)
-  e2:SetCondition(s.accon)
-  e2:SetValue(1)
+  e2:SetTargetRange(LOCATION_MZONE,0)
+  e2:SetValue(s.efilter)
   c:RegisterEffect(e2)
 
   -- Add Bonding S/T
   local e3=Effect.CreateEffect(c)
   e3:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH+CATEGORY_SPECIAL_SUMMON)
   e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-  e3:SetCode(EVENT_BATTLE_DESTROYING)
+  e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
+  e3:SetCode(EVENT_SUMMON_SUCCESS)
   e3:SetCountLimit(1,id)
-  e3:SetCondition(aux.bdocon)
   e3:SetTarget(s.thtg)
   e3:SetOperation(s.thop)
   c:RegisterEffect(e3)
+  local e4=e3:Clone()
+  e4:SetCode(EVENT_SPSUMMON_SUCCESS)
+  c:RegisterEffect(e4)
 end
-s.listed_names = {CARD_CARBONEDDON}
+s.listed_names = {CARD_HYDROGEDDON}
 s.listed_series = {0x100} --Bonding
 
--- actlimit when battling
-function s.accon(e)
-  --local c=e:GetHandler()
-  --if c != Duel.GetAttacker() && c != Duel.GetAttackTarget() then return false end
-  -- battles a Fire or Pyro monster.
-  local tc = e:GetHandler():GetBattleTarget()
-  return tc and (tc:IsRace(RACE_PYRO) or tc:IsAttribute(ATTRIBUTE_FIRE))
+-- unaffected
+function s.efilter(e,re)
+  local c=re:GetHandler()
+	return (c:IsRace(RACE_PYRO) or c:IsAttribute(ATTRIBUTE_FIRE)) and re:IsActivated()
 end
 
 -- Add Bonding S/T
