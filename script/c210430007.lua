@@ -24,6 +24,7 @@ function s.initial_effect(c)
 	e2:SetOperation(s.activate2)
 	c:RegisterEffect(e2)
 end
+s.listed_names={CARD_DARK_MAGICIAN}
 s.listed_series={0x20a2}
 --Activate
 function s.condition(e, tp, eg, ep, ev, re, r, rp)
