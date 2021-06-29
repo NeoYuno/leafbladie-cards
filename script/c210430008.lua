@@ -35,7 +35,7 @@ function s.cfilter(c)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,0))
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ZONE)
 	local zone=Duel.SelectFieldZone(tp,1,LOCATION_MZONE,0,filter)
 	Duel.Hint(HINT_ZONE,tp,zone)
 	e:SetLabel(math.log(zone,2))
@@ -49,7 +49,7 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
 		e1:SetReset(RESET_PHASE+PHASE_STANDBY)
-		e1:SetLabel(2^zone)
+		e1:SetLabel(zone)
 		e1:SetLabelObject(tc)
 		e1:SetCountLimit(1)
 		e1:SetOperation(s.retop)
@@ -63,13 +63,37 @@ end
 function s.retop(e,tp,eg,ep,ev,re,r,rp)
 	local zone=e:GetLabel()
 	local tc=e:GetLabelObject()
-	if Duel.MoveToField(tc,tp,tp,LOCATION_MZONE,tc:GetPreviousPosition(),true,zone) then
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_UPDATE_ATTACK)
-		e1:SetValue(500)
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-		tc:RegisterEffect(e1)
+	local op=Duel.SelectOption(tp,aux.Stringid(id,0),aux.Stringid(id,1))
+	if op==0 then
+		if Duel.MoveToField(tc,tp,tp,LOCATION_MZONE,tc:GetPreviousPosition(),true,2^zone) then
+			local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_UPDATE_ATTACK)
+			e1:SetValue(500)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+			tc:RegisterEffect(e1)
+		end
+	else
+		local seq=0
+		if zone==0 then seq=4 end
+		if zone==1 then seq=3 end
+		if zone==2 then seq=2 end
+		if zone==3 then seq=1 end
+		if Duel.MoveToField(tc,tp,1-tp,LOCATION_MZONE,tc:GetPreviousPosition(),true,2^seq) then
+			local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_UPDATE_ATTACK)
+			e1:SetValue(500)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+			tc:RegisterEffect(e1)
+			local e2=Effect.CreateEffect(e:GetHandler())
+			e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+			e2:SetType(EFFECT_TYPE_SINGLE)
+			e2:SetCode(EFFECT_SET_CONTROL)
+			e2:SetValue(1-tc:GetOwner())
+			e2:SetReset(RESET_EVENT+RESETS_STANDARD)
+			tc:RegisterEffect(e2)
+		end
 	end
 end
 --Special summon
