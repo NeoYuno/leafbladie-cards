@@ -42,6 +42,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.SendtoDeck(g, nil, SEQ_DECKSHUFFLE, REASON_COST)
   local dg=Duel.GetOperatedGroup()
   local ct=dg:FilterCount(Card.GetPreviousCodeOnField, nil, CARD_BLUEEYES_W_DRAGON)
+  local atk=g:FilterCount(Card.IsLocation, nil, LOCATION_DECK)
   if ct>=1 then
     -- atk for each dragon in your GY
     local e1=Effect.CreateEffect(c)
@@ -49,7 +50,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
     e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
     e1:SetCode(EFFECT_UPDATE_ATTACK)
     e1:SetRange(LOCATION_MZONE)
-    e1:SetValue(#g*1000)
+    e1:SetValue(atk*1000)
     e1:SetReset(RESET_EVENT|RESETS_STANDARD_DISABLE&~RESET_TOFIELD)
     c:RegisterEffect(e1)
   end
