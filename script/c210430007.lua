@@ -39,7 +39,7 @@ end
 function s.target(e, tp, eg, ep, ev, re, r, rp, chk)
 	if chk==0 then return Duel.GetLocationCount(tp, LOCATION_MZONE)>0 
         and not Duel.IsPlayerAffectedByEffect(tp, CARD_BLUEEYES_SPIRIT) 
-		and Duel.IsPlayerCanSpecialSummonMonster(tp, 511000879, 0, TYPES_TOKEN, 0, 0, 1, RACE_WINGEDBEAST, ATTRIBUTE_WIND)
+		and Duel.IsPlayerCanSpecialSummonMonster(tp, 210430013, 0, TYPES_TOKEN, 0, 0, 1, RACE_WINGEDBEAST, ATTRIBUTE_WIND)
 	end
     Duel.SetOperationInfo(0, CATEGORY_NEGATE, eg, 1, 0, 0)
 	Duel.SetOperationInfo(0, CATEGORY_TOKEN, nil, 2, 0, 0)
@@ -50,9 +50,9 @@ function s.activate(e, tp, eg, ep, ev, re, r, rp)
 		local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 		if ft>1 and Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) then ft=1 end
 		if ft<2 then return end
-		if not Duel.IsPlayerCanSpecialSummonMonster(tp, 511000879, 0, TYPES_TOKEN, 0, 0, 1, RACE_WINGEDBEAST, ATTRIBUTE_WIND) then return end
+		if not Duel.IsPlayerCanSpecialSummonMonster(tp, 210430013, 0, TYPES_TOKEN, 0, 0, 1, RACE_WINGEDBEAST, ATTRIBUTE_WIND) then return end
 		for i=1,2 do
-			local token=Duel.CreateToken(tp,511000879)
+			local token=Duel.CreateToken(tp,210430013)
 			Duel.SpecialSummonStep(token,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
 		end
 		Duel.SpecialSummonComplete()
@@ -76,7 +76,7 @@ function s.target2(e, tp, eg, ep, ev, re, r, rp, chk, chkc)
 	if chkc then return chkc==tg end
 	if chk==0 then return tg:IsOnField() and tg:IsRelateToBattle() and Duel.GetLocationCount(tp, LOCATION_MZONE)>0 
         and not Duel.IsPlayerAffectedByEffect(tp, CARD_BLUEEYES_SPIRIT) 
-		and Duel.IsPlayerCanSpecialSummonMonster(tp, 511000879, 0, TYPES_TOKEN, 0, 0, 1, RACE_WINGEDBEAST, ATTRIBUTE_WIND) end
+		and Duel.IsPlayerCanSpecialSummonMonster(tp, 210430013, 0, TYPES_TOKEN, 0, 0, 1, RACE_WINGEDBEAST, ATTRIBUTE_WIND) end
 	Duel.SetTargetCard(tg)
 end
 function s.activate2(e, tp, eg,ep, ev, re, r, rp)
@@ -85,9 +85,9 @@ function s.activate2(e, tp, eg,ep, ev, re, r, rp)
         local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 		if ft>1 and Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) then ft=1 end
 		if ft<2 then return end
-		if not Duel.IsPlayerCanSpecialSummonMonster(tp, 511000879, 0, TYPES_TOKEN, 0, 0, 1, RACE_WINGEDBEAST, ATTRIBUTE_WIND) then return end
+		if not Duel.IsPlayerCanSpecialSummonMonster(tp, 210430013, 0, TYPES_TOKEN, 0, 0, 1, RACE_WINGEDBEAST, ATTRIBUTE_WIND) then return end
 		for i=1,2 do
-			local token=Duel.CreateToken(tp,511000879)
+			local token=Duel.CreateToken(tp,210430013)
 			Duel.SpecialSummonStep(token,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
 		end
 		Duel.SpecialSummonComplete()
@@ -103,7 +103,7 @@ function s.activate2(e, tp, eg,ep, ev, re, r, rp)
     end
 end
 function s.desfilter(c)
-	return c:IsFaceup() and c:IsCode(511000879)
+	return c:IsFaceup() and c:IsCode(210430013)
 end
 function s.spfilter(c, e, tp)
 	return (c:IsSetCard(0x20a2) and c:IsType(TYPE_MONSTER)) or c:IsCode(CARD_DARK_MAGICIAN) and c:IsCanBeSpecialSummoned(e, 0, tp, false, false)
