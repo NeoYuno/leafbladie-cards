@@ -22,53 +22,46 @@ function s.initial_effect(c)
 	e2:SetOperation(s.thop)
 	c:RegisterEffect(e2)
 end
-function s.neosfilter(c)
-	return c:IsSetCard(0x9) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
-end
-function s.neospacianfilter(c)
-	return c:IsSetCard(0x1f) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
-end
-function s.herofilter(c)
-	return c:IsSetCard(0x8) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+function s.filter(c)
+	return (c:IsSetCard(0x9) or c:IsSetCard(0x1f) or c:IsSetCard(0x8)) and c:IsAbleToHand()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.neosfilter,tp,LOCATION_DECK,0,1,nil)
-        and Duel.IsExistingMatchingCard(s.neospacianfilter,tp,LOCATION_DECK,0,1,nil)
-        and Duel.IsExistingMatchingCard(s.herofilter,tp,LOCATION_DECK,0,1,nil)
+	if chk==0 then
+		local dg=Duel.GetMatchingGroup(s.filter,tp,LOCATION_DECK,0,nil)
+		return dg:GetClassCount(Card.GetSetCard)>=3
 	end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	local g1=Duel.GetMatchingGroup(s.neosfilter,tp,LOCATION_DECK,0,nil)
-    local g2=Duel.GetMatchingGroup(s.neospacianfilter,tp,LOCATION_DECK,0,nil)
-    local g3=Duel.GetMatchingGroup(s.herofilter,tp,LOCATION_DECK,0,nil)
-	if #g1>0 and #g2>0 and #g3>0 then
+	local g=Duel.GetMatchingGroup(s.filter,tp,LOCATION_DECK,0,nil)
+	if g:GetClassCount(Card.GetSetCard)>=3 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
-		local sg1=g1:Select(tp,1,1,nil)
+		local sg1=g:FilterSelect(tp,Card.IsSetCard,1,1,nil,0x9)
+		g:RemoveCard(sg1:GetFirst())
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
-		local sg2=g2:Select(tp,1,1,nil)
-        g3:RemoveCard(sg1:GetFirst())
+		local sg2=g:FilterSelect(tp,Card.IsSetCard,1,1,nil,0x1f)
+		g:RemoveCard(sg2:GetFirst())
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
-		local sg3=g3:Select(tp,1,1,nil)
+		local sg3=g:FilterSelect(tp,Card.IsSetCard,1,1,nil,0x8)
 		sg1:Merge(sg2)
 		sg1:Merge(sg3)
 		Duel.ConfirmCards(1-tp,sg1)
 		Duel.ShuffleDeck(tp)
-        if sg1:IsExists(Card.IsCode,1,nil,CARD_NEOS) and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
-            Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-            local cg=sg1:Select(tp,1,1,nil)
-            local tc=cg:GetFirst()
-            Duel.SendtoHand(tc,nil,REASON_EFFECT)
-            sg1:RemoveCard(tc)
-            Duel.SendtoGrave(sg1,REASON_EFFECT)
-        else 
-            Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_ATOHAND)
-            local cg=sg1:RandomSelect(1-tp,1)
-            local tc=cg:GetFirst()
-            Duel.SendtoHand(tc,nil,REASON_EFFECT)
-            sg1:RemoveCard(tc)
-            Duel.SendtoGrave(sg1,REASON_EFFECT)
-        end
+		if sg1:IsExists(Card.IsCode,1,nil,CARD_NEOS) and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+			local cg=sg1:Select(tp,1,1,nil)
+			local tc=cg:GetFirst()
+			Duel.SendtoHand(tc,nil,REASON_EFFECT)
+			sg1:RemoveCard(tc)
+			Duel.SendtoGrave(sg1,REASON_EFFECT)
+		else
+			Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_ATOHAND)
+			local cg=sg1:RandomSelect(1-tp,1)
+			local tc=cg:GetFirst()
+			Duel.SendtoHand(tc,nil,REASON_EFFECT)
+			sg1:RemoveCard(tc)
+			Duel.SendtoGrave(sg1,REASON_EFFECT)
+		end
 	end
 end
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
