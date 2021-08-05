@@ -11,7 +11,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 s.listed_names={CARD_NEOS}
-s.listed_series=(0x1f,0x8)
+s.listed_series={0x1f,0x8}
 function s.costchk(ct)
 	return function(sg,tp)
 		return aux.ChkfMMZ(#sg) and ct:GetClassCount(Card.GetCode)>=#sg
