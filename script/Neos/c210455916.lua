@@ -28,13 +28,13 @@ end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local dg=Duel.GetMatchingGroup(s.filter,tp,LOCATION_DECK,0,nil)
-		return dg:GetClassCount(Card.GetSetCard)>=3
+		return dg:GetClassCount(Card.GetSetCard)>1
 	end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(s.filter,tp,LOCATION_DECK,0,nil)
-	if g:GetClassCount(Card.GetSetCard)>=3 then
+	if g:GetClassCount(Card.GetSetCard)>1 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
 		local sg1=g:FilterSelect(tp,Card.IsSetCard,1,1,nil,0x9)
 		g:RemoveCard(sg1:GetFirst())
