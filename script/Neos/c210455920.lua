@@ -6,14 +6,13 @@ function s.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	c:RegisterEffect(e1)
-    --Cannot to extra
+	--Disable
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD)
-	e2:SetCode(EFFECT_CANNOT_TO_DECK)
-	e2:SetRange(LOCATION_SZONE)
-	e2:SetTargetRange(LOCATION_ONFIELD+LOCATION_GRAVE,LOCATION_ONFIELD+LOCATION_GRAVE)
-	e2:SetTarget(s.target)
-	e2:SetValue(1)
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e2:SetCode(EVENT_CHAIN_SOLVING)
+	e2:SetRange(LOCATION_FZONE)
+	e2:SetCondition(s.discon)
+	e2:SetOperation(s.disop)
 	c:RegisterEffect(e2)
     --Search
 	local e3=Effect.CreateEffect(c)
@@ -43,8 +42,21 @@ function s.initial_effect(c)
 end
 s.listed_names={42015635}
 s.listed_series={0x9,0x1f}
-function s.target(e,c)
-	return c:IsSetCard(0x9) and c:IsType(TYPE_FUSION)
+function s.disfilter(c,tp)
+	return c:IsOnField() and c:IsControler(tp) and c:IsType(TYPE_FUSION) and c:IsSetCard(0x9)
+end
+function s.discon(e,tp,eg,ep,ev,re,r,rp)
+	local ex1,tg1,tc1=Duel.GetOperationInfo(ev,CATEGORY_TOHAND)
+	local ex2,tg2,tc2=Duel.GetOperationInfo(ev,CATEGORY_TODECK)
+	local ex3,tg3,tc3=Duel.GetOperationInfo(ev,CATEGORY_TOEXTRA)
+	return (ex1 and tg1~=nil and tc1+tg1:FilterCount(s.disfilter,nil,tp)-#tg1>0)
+	    or (ex2 and tg2~=nil and tc2+tg2:FilterCount(s.disfilter,nil,tp)-#tg2>0)
+	    or (ex3 and tg3~=nil and tc3+tg3:FilterCount(s.disfilter,nil,tp)-#tg3>0)
+end
+function s.disop(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
+		Duel.NegateEffect(ev)
+	end
 end
 function s.cfilter(c,tp)
 	return c:IsSetCard(0x1f) and c:IsType(TYPE_MONSTER) and c:IsSummonPlayer(tp)
@@ -71,7 +83,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
         Duel.SendtoHand(g,nil,REASON_EFFECT)
         Duel.ConfirmCards(1-tp,g)
         local sg=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_HAND,0,nil,e,tp)
-        if tc:IsCode(CARD_NEOS) and #sg>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
+        if tc:IsCode(CARD_NEOS) and #sg>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
             Duel.BreakEffect()
             Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 			local tc=sg:Select(tp,1,1,nil)
