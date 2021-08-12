@@ -1,4 +1,4 @@
---MNEX II
+--NEX II
 local s,id=GetID()
 function s.initial_effect(c)
 	--Activate
@@ -97,8 +97,7 @@ function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.damcon(e,tp,eg,ep,ev,re,r,rp)
-    local c=e:GetLabelObject()
-	return c:IsReason(REASON_EFFECT)
+	return (r&REASON_EFFECT)~=0 and eg:IsContains(e:GetLabelObject())
 end
 function s.damop(e,tp,eg,ep,ev,re,r,rp)
     Duel.Damage(1-tp,2000,REASON_EFFECT)
