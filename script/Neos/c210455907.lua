@@ -35,6 +35,9 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(nil,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 end
+function s.filter(c)
+	return c:IsPosition(POS_FACEUP_ATTACK) and c:IsCanChangePosition()
+end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectMatchingCard(tp,nil,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
@@ -66,7 +69,7 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
             Duel.RegisterEffect(e1,tp)
             Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
 		else
-            local tg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+            local tg=Duel.GetMatchingGroup(s.filter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
             if #tg>0 then
                 Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_POSCHANGE)
                 local sg=tg:Select(tp,1,99,nil)
