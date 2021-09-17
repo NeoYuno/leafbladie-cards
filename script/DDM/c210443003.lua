@@ -78,9 +78,10 @@ function s.desfilter2(c,cg)
 	return cg:IsContains(c)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	local cg=e:GetHandler():GetColumnGroup()
 	local b1=Duel.IsExistingMatchingCard(s.desfilter1,tp,0,LOCATION_MZONE,1,nil)
 	local b2=Duel.IsExistingMatchingCard(s.desfilter2,tp,0,LOCATION_ONFIELD,1,e:GetHandler(),cg)
-	local b3=Duel.IsExistingMatchingCard(aux.TRUE,tp,0,LOCATION_SZONE,1,nil)
+	local b3=Duel.IsExistingMatchingCard(s.desfilter1,tp,0,LOCATION_SZONE,1,nil)
 	if chk==0 then return b1 or b2 or b3 end
 	Duel.SetOperationInfo(0,CATEGORY_DICE,nil,0,tp,1)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,nil,1,0,0)
@@ -94,7 +95,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		if #g==0 then return end
 		Duel.Destroy(g,REASON_EFFECT)
 	elseif d==6 then
-		local g=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_SZONE,nil)
+		local g=Duel.GetMatchingGroup(s.desfilter1,tp,0,LOCATION_SZONE,nil)
 		if #g==0 then return end
 		Duel.Destroy(g,REASON_EFFECT)
 	else

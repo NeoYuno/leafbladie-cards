@@ -117,10 +117,11 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.filter(c)
-	return c:IsType(TYPE_MONSTER) and not c.roll_dice
+	return c:IsType(TYPE_MONSTER) and c.roll_dice
 end
 function s.dicecon(e,tp,eg,ep,ev,re,r,rp)
-    return not Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_GRAVE,0,1,nil) and e:GetHandler():GetFlagEffect(id)==0
+    local ct=Duel.GetMatchingGroupCount(s.filter,tp,LOCATION_MZONE,0,nil)
+	return ct==Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0) and e:GetHandler():GetFlagEffect(id)==0 and rp==e:GetHandlerPlayer()
 end
 function s.diceop(e,tp,eg,ep,ev,re,r,rp)
     local cc=Duel.GetCurrentChain()

@@ -29,19 +29,26 @@ end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
 	local d=Duel.TossDice(tp,1)
-    local g=Duel.SelectMatchingCard(tp,Card.IsType,tp,LOCATION_MZONE,LOCATION_MZONE,1,d,nil,TYPE_MONSTER)
+    local ct=0
+    local g=Duel.GetMatchingGroup(Card.IsType,tp,LOCATION_MZONE,LOCATION_MZONE,nil,TYPE_MONSTER)
     for tc in aux.Next(g) do
-        if tc:IsControler(tp) then
-            i=0
-            p1=LOCATION_MZONE
-            p2=0
-        else
-            i=16
-            p2=LOCATION_MZONE
-            p1=0
+        while ct<d do
+            local tc=g:Select(tp,1,1,nil):GetFirst()
+            if tc:IsControler(tp) then
+                i=0
+                p1=LOCATION_MZONE
+                p2=0
+            else
+                i=16
+                p2=LOCATION_MZONE
+                p1=0
+            end
+            Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOZONE)
+            Duel.MoveSequence(tc,math.log(Duel.SelectDisableField(tp,1,p1,p2,0),2)-i)
+            ct=ct+1
+            if ct<d and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
+                return end
         end
-        Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOZONE)
-        Duel.MoveSequence(tc,math.log(Duel.SelectDisableField(tp,1,p1,p2,0),2)-i)
     end
 end
 function s.filter1(c)

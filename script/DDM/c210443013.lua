@@ -48,12 +48,12 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
             local spos=0
             if tc:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_ATTACK) then spos=spos+POS_FACEUP_ATTACK end
             if tc:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEDOWN_DEFENSE) then spos=spos+POS_FACEDOWN_DEFENSE end
-            if spos~=0 and Duel.SpecialSummon(tc,0,tp,tp,false,false,spos)~=0 then
-                if tc:IsFacedown() then
-                    Duel.ConfirmCards(1-tp,tc)
-                end
+            Duel.SpecialSummonStep(tc,0,tp,tp,false,false,spos)
+            if tc:IsFacedown() then
+                Duel.ConfirmCards(1-tp,g)
             end
         end
+        Duel.SpecialSummonComplete()
 	else
         local g=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.filter2),tp,LOCATION_GRAVE,0,nil,e,tp)
         if #g==0 then return end

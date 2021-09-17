@@ -29,30 +29,30 @@ function s.tgfilter(c)
     return c.roll_dice and c:IsAbleToGraveAsCost()
 end
 function s.tgcost(e,tp,eg,ep,ev,re,r,rp,chk)
-    local b1=Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_DECK,0,3,nil)
-    local b2=Duel.IsExistingMatchingCard(Card.IsAbleToRemoveAsCost,tp,LOCATION_GRAVE,0,3,nil)
+    local b1=Duel.IsExistingMatchingCard(s.filter1,tp,LOCATION_GRAVE,0,3,nil)
+	local b2=Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_DECK,0,3,nil)
 	if chk==0 then return (b1 and Duel.IsEnvironment(210443010)) or b2 end
     if b1 and Duel.IsEnvironment(210443010) then
         if b2 and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
             Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-            local g=Duel.SelectMatchingCard(tp,s.tgfilter,tp,LOCATION_DECK,0,3,3,nil)
+            local g=Duel.SelectMatchingCard(tp,s.filter2,tp,LOCATION_DECK,0,3,3,nil)
             if #g>0 then
                 Duel.SendtoGrave(g,REASON_COST)
             end
-        elseif not b2 then
-            Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-            local g=Duel.SelectMatchingCard(tp,s.tgfilter,tp,LOCATION_DECK,0,3,3,nil)
-            if #g>0 then
-                Duel.SendtoGrave(g,REASON_COST)
-            end
-        end
-    else
-        Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-        local g=Duel.SelectMatchingCard(tp,Card.IsAbleToRemoveAsCost,tp,LOCATION_GRAVE,0,3,3,nil)
-        if #g>0 then
-            Duel.Remove(g,POS_FACEUP,REASON_COST)
-        end
-    end
+        else
+            Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+			local g=Duel.SelectMatchingCard(tp,s.filter1,tp,LOCATION_GRAVE,0,3,3,nil)
+			if #g>0 then
+				Duel.Remove(g,POS_FACEUP,REASON_COST)
+			end
+		end
+    elseif b1 and not Duel.IsEnvironment(210443010) then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+		local g=Duel.SelectMatchingCard(tp,s.filter1,tp,LOCATION_GRAVE,0,3,3,nil)
+		if #g>0 then
+			Duel.Remove(g,POS_FACEUP,REASON_COST)
+		end
+	end
 end
 function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToGrave,tp,LOCATION_DECK,0,1,nil) end
