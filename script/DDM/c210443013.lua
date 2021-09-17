@@ -50,7 +50,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
             if tc:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEDOWN_DEFENSE) then spos=spos+POS_FACEDOWN_DEFENSE end
             Duel.SpecialSummonStep(tc,0,tp,tp,false,false,spos)
             if tc:IsFacedown() then
-                Duel.ConfirmCards(1-tp,g)
+                Duel.ConfirmCards(1-tp,tc)
             end
         end
         Duel.SpecialSummonComplete()
