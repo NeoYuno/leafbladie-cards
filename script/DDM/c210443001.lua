@@ -25,6 +25,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 s.roll_dice=true
+s.listed_names={210443010}
 function s.tgfilter(c)
     return c.roll_dice and c:IsAbleToGrave()
 end

@@ -25,42 +25,45 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 s.roll_dice=true
-function s.tgfilter(c)
-    return c.roll_dice and c:IsAbleToGraveAsCost()
+s.listed_names={210443010}
+function s.fieldcond(c)
+	return c:IsFaceup() and c:IsCode(210443010)
 end
 function s.tgcost(e,tp,eg,ep,ev,re,r,rp,chk)
-    local b1=Duel.IsExistingMatchingCard(s.filter1,tp,LOCATION_GRAVE,0,3,nil)
-	local b2=Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_DECK,0,3,nil)
-	if chk==0 then return (b1 and Duel.IsEnvironment(210443010)) or b2 end
-    if b1 and Duel.IsEnvironment(210443010) then
-        if b2 and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
-            Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-            local g=Duel.SelectMatchingCard(tp,s.filter2,tp,LOCATION_DECK,0,3,3,nil)
-            if #g>0 then
-                Duel.SendtoGrave(g,REASON_COST)
-            end
-        else
-            Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-			local g=Duel.SelectMatchingCard(tp,s.filter1,tp,LOCATION_GRAVE,0,3,3,nil)
-			if #g>0 then
-				Duel.Remove(g,POS_FACEUP,REASON_COST)
-			end
-		end
-    elseif b1 and not Duel.IsEnvironment(210443010) then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local g=Duel.SelectMatchingCard(tp,s.filter1,tp,LOCATION_GRAVE,0,3,3,nil)
-		if #g>0 then
+    local fc=Duel.IsExistingMatchingCard(s.fieldcond,tp,LOCATION_FZONE,LOCATION_FZONE,1,nil)
+	local gv=Duel.IsExistingMatchingCard(Card.IsAbleToRemoveAsCost,tp,LOCATION_GRAVE,0,3,nil)
+	local dk=Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK,0,3,nil)
+	if chk==0 then return gv or (fc and dk) end
+	if gv and fc and dk then
+		if Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+			local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_DECK,0,3,3,nil)
+			Duel.SendtoGrave(g,REASON_COST)
+		else
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+			local g=Duel.SelectMatchingCard(tp,Card.IsAbleToRemoveAsCost,tp,LOCATION_GRAVE,0,3,3,nil)
 			Duel.Remove(g,POS_FACEUP,REASON_COST)
 		end
+	elseif fc and dk and not gv then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+		local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_DECK,0,3,3,nil)
+		Duel.SendtoGrave(g,REASON_COST)
+	elseif gv and not fc or not dk then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+		local g=Duel.SelectMatchingCard(tp,Card.IsAbleToRemoveAsCost,tp,LOCATION_GRAVE,0,3,3,nil)
+		Duel.Remove(g,POS_FACEUP,REASON_COST)
 	end
 end
+function s.tgfilter(c)
+    return c.roll_dice and c:IsAbleToGrave()
+end
 function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToGrave,tp,LOCATION_DECK,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_DECK,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
 end
 function s.tgop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToGrave,tp,LOCATION_DECK,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,s.tgfilter,tp,LOCATION_DECK,0,1,1,nil)
 	if #g>0 then
 		Duel.SendtoGrave(g,REASON_EFFECT)
 	end

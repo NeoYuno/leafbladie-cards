@@ -45,6 +45,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 s.roll_dice=true
+s.listed_names={210443010}
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(1-tp,LOCATION_MZONE,nil,LOCATION_REASON_COUNT)>0 end
 	Duel.SetOperationInfo(0,CATEGORY_DICE,nil,0,tp,1)
@@ -56,13 +57,14 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
     local zone=Duel.SelectDisableField(tp,ct,0,LOCATION_MZONE,0)
 	Duel.Hint(HINT_ZONE,tp,zone)
     e:SetLabel(zone)
+	c:RegisterFlagEffect(id,RESET_PHASE+PHASE_END,0,2)
 end
 function s.disfilter(c,tp,zone)
 	return c:IsFaceup() and c:IsType(TYPE_EFFECT) and aux.IsZone(c,zone,tp)
 end
 function s.discon(e,tp,eg,ep,ev,re,r,rp)
 	local zone=e:GetLabelObject():GetLabel()
-	return eg:IsExists(s.disfilter,1,nil,tp,zone)
+	return eg:IsExists(s.disfilter,1,nil,tp,zone) and e:GetHandler():GetFlagEffect(id)>0
 end
 function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -79,12 +81,12 @@ function s.disop(e,tp,eg,ep,ev,re,r,rp)
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_DISABLE)
-			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,2)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 			tc:RegisterEffect(e1,true)
 			local e2=Effect.CreateEffect(c)
 			e2:SetType(EFFECT_TYPE_SINGLE)
 			e2:SetCode(EFFECT_DISABLE_EFFECT)
-			e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,2)
+			e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 			tc:RegisterEffect(e2,true)
 		end
     end
@@ -95,31 +97,33 @@ end
 function s.filter2(c)
     return c.roll_dice and c:IsType(TYPE_TRAP) and c:IsAbleToGraveAsCost()
 end
+function s.fieldcond(c)
+	return c:IsFaceup() and c:IsCode(210443010)
+end
 function s.rmcost(e,tp,eg,ep,ev,re,r,rp,chk)
-    local b1=Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_DECK,0,2,nil)
-    local b2=Duel.IsExistingMatchingCard(s.filter1,tp,LOCATION_GRAVE,0,2,nil)
-	if chk==0 then return (b1 and Duel.IsEnvironment(210443010)) or b2 end
-    if b1 and Duel.IsEnvironment(210443010) then
-        if b2 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
-            Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-            local g=Duel.SelectMatchingCard(tp,s.filter2,tp,LOCATION_DECK,0,2,2,nil)
-            if #g>0 then
-                Duel.SendtoGrave(g,REASON_COST)
-            end
-        elseif not b2 then
-            Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-            local g=Duel.SelectMatchingCard(tp,s.filter2,tp,LOCATION_DECK,0,2,2,nil)
-            if #g>0 then
-                Duel.SendtoGrave(g,REASON_COST)
-            end
-        end
-    else
-        Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-        local g=Duel.SelectMatchingCard(tp,s.filter1,tp,LOCATION_GRAVE,0,2,2,nil)
-        if #g>0 then
-            Duel.Remove(g,POS_FACEUP,REASON_COST)
-        end
-    end
+    local fc=Duel.IsExistingMatchingCard(s.fieldcond,tp,LOCATION_FZONE,LOCATION_FZONE,1,nil)
+	local gv=Duel.IsExistingMatchingCard(s.filter1,tp,LOCATION_GRAVE,0,2,nil)
+	local dk=Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_DECK,0,2,nil)
+	if chk==0 then return gv or (fc and dk) end
+	if gv and fc and dk then
+		if Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+			local g=Duel.SelectMatchingCard(tp,s.filter2,tp,LOCATION_DECK,0,2,2,nil)
+			Duel.SendtoGrave(g,REASON_COST)
+		else
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+			local g=Duel.SelectMatchingCard(tp,s.filter1,tp,LOCATION_GRAVE,0,2,2,nil)
+			Duel.Remove(g,POS_FACEUP,REASON_COST)
+		end
+	elseif fc and dk and not gv then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+		local g=Duel.SelectMatchingCard(tp,s.filter2,tp,LOCATION_DECK,0,2,2,nil)
+		Duel.SendtoGrave(g,REASON_COST)
+	elseif gv and not fc or not dk then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+		local g=Duel.SelectMatchingCard(tp,Cs.filter1,tp,LOCATION_GRAVE,0,2,2,nil)
+		Duel.Remove(g,POS_FACEUP,REASON_COST)
+	end
 end
 function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsAbleToRemove() end
