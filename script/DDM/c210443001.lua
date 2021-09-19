@@ -78,18 +78,37 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
     local ct=e:GetLabel()
-    local res={0,0,0,0,0,0,0,false,false,false,false}
-	for _,i in ipairs({Duel.TossDice(tp,ct+1)}) do
-		res[i]=res[i]+1
-		if res[i]>=2 then
-            local g=Duel.GetMatchingGroup(s.filter,tp,LOCATION_HAND,0,nil,e,tp)
-            if #g>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
-                Duel.BreakEffect()
-                Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-                local sc=g:Select(tp,1,1,nil)
-                Duel.SpecialSummon(sc,0,tp,tp,false,false,POS_FACEUP)
-            end
-        break
-        end
-    end
+	if ct+1>5 then
+		ct=(ct+1)-5
+		local res={0,0,0,0,0,0,0,false,false,false,false}
+		for num1,num2 in ipairs({Duel.TossDice(tp,5)},{Duel.TossDice(tp,ct)}) do
+			res[num1]=res[num1]+1
+			res[num2]=res[num2]+1
+			if res[num1]>=2 or res[num2]>=2 then
+				local g=Duel.GetMatchingGroup(s.filter,tp,LOCATION_HAND,0,nil,e,tp)
+				if #g>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
+					Duel.BreakEffect()
+					Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+					local sc=g:Select(tp,1,1,nil)
+					Duel.SpecialSummon(sc,0,tp,tp,false,false,POS_FACEUP)
+				end
+			break
+			end
+		end
+	else
+		local res={0,0,0,0,0,0,0,false,false,false,false}
+		for _,i in ipairs({Duel.TossDice(tp,ct+1)}) do
+			res[i]=res[i]+1
+			if res[i]>=2 then
+				local g=Duel.GetMatchingGroup(s.filter,tp,LOCATION_HAND,0,nil,e,tp)
+				if #g>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
+					Duel.BreakEffect()
+					Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+					local sc=g:Select(tp,1,1,nil)
+					Duel.SpecialSummon(sc,0,tp,tp,false,false,POS_FACEUP)
+				end
+			break
+			end
+		end
+	end
 end
