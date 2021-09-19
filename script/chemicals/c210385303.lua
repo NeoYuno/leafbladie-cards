@@ -75,11 +75,10 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
   -- Destroy Fire/Pyro, then burn.
   local tc=Duel.GetFirstTarget()
 
-  if tc and tc:IsRelateToEffect(e) and Duel.Destroy(tc,REASON_EFFECT) > 0 then
+  if not tc:IsRelateToEffect(e) or Duel.Destroy(tc,REASON_EFFECT)==0 then return end
     Duel.Damage(1-tp,800,REASON_EFFECT,true)
     Duel.Damage(tp,800,REASON_EFFECT,true)
     Duel.RDComplete()
-  end
 
   -- Add Bonding and listed monster to hand.
   if Duel.IsExistingMatchingCard(s.thfilter1,tp,LOCATION_DECK,0,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
