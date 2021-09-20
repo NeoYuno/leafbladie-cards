@@ -49,10 +49,9 @@ end
 function s.eqcon(e,tp,eg,ep,ev,re,r,rp)
 	local phase=Duel.GetCurrentPhase()
 	if phase~=PHASE_DAMAGE or Duel.IsDamageCalculated() then return false end
-	local a=Duel.GetAttacker()
-	local d=Duel.GetAttackTarget()
-	return d~=nil and d:IsFaceup() and ((a:GetControler()==tp and a:IsAttribute(ATTRIBUTE_DARK) and a:IsRace(RACE_MACHINE) and a:IsRelateToBattle())
-		or (d:GetControler()==tp and d:IsAttribute(ATTRIBUTE_DARK) and d:IsRace(RACE_MACHINE) and d:IsRelateToBattle()))
+	local tc=Duel.GetAttacker()
+	if tc:IsControler(1-tp) then tc=Duel.GetAttackTarget() end
+	return tc and tc:IsFaceup() and tc:IsControler(tp) and tc:IsRace(RACE_MACHINE) and tc:IsAttribute(ATTRIBUTE_DARK)
 end
 function s.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsFaceup() end

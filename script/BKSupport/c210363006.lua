@@ -22,7 +22,7 @@ function s.initial_effect(c)
 	e2:SetOperation(s.thop)
 	c:RegisterEffect(e2)
 end
-s.toss_dice=true
+s.toss_coin=true
 s.listed_names={3113667}
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
     local g=Duel.GetFieldGroup(tp,LOCATION_HAND,0)
@@ -56,7 +56,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.thfilter(c,fc)
-	return (c:IsCode(3113667) or (fc and (c:IsType(TYPE_SPELL+TYPE_TRAP) and c.toss_coin and not c:IsCode(id)))) and c:IsAbleToHand()
+	return c:IsCode(3113667) or (fc and c:IsType(TYPE_SPELL+TYPE_TRAP) and c.toss_coin and not c:IsCode(id)) and c:IsAbleToHand()
 end
 function s.fieldcond(c)
 	return c:IsFaceup() and c:IsCode(3113667)

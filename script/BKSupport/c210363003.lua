@@ -167,5 +167,6 @@ function s.econ(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(s.filter,e:GetHandlerPlayer(),LOCATION_SZONE,0,3,nil)
 end
 function s.efilter(e,te)
-	return te:GetOwner()~=e:GetOwner() and not te:GetCode()==67048711,210363007
+	local c=te:GetHandler()
+	return not c:IsCode(67048711,210363007)
 end
