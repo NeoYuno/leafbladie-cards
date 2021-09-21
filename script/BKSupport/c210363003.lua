@@ -62,7 +62,7 @@ function s.mzfilter(c)
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	local rg=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_HAND+LOCATION_MZONE+LOCATION_GRAVE,0,c)
+	local rg=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_HAND+LOCATION_ONFIELD+LOCATION_GRAVE,0,c)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	local ct=-ft+1
 	if chk==0 then return ft>-2 and #rg>1 and (ft>0 or rg:IsExists(s.mzfilter,ct,nil)) end
