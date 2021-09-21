@@ -76,7 +76,7 @@ function s.spfilter(c,e,tp)
 	return c:IsRace(RACE_DRAGON) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.rescon(sg,e,tp,mg)
-	return sg:FilterCount(Card.IsRace,nil,RACE_DRAGON)<=1 and sg:FilterCount(Card.IsType,nil,RACE_SPELLCASTER)<=1
+	return sg:FilterCount(Card.IsRace,nil,RACE_DRAGON)<=1 and sg:FilterCount(Card.IsRace,nil,RACE_SPELLCASTER)<=1
 end
 function s.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
