@@ -101,7 +101,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RaiseSingleEvent(c,EVENT_DETACH_MATERIAL,e,0,0,0,0)
 	local og=Duel.GetOperatedGroup()
 	Duel.BreakEffect()
-	if og:IsExists(Card.IsRace,1,nil,RACE_DRAGON) then
+	if #og==1 and og:GetFirst():IsRace(RACE_DRAGON) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 		local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil)
 		if #g>0 then
@@ -109,7 +109,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 			Duel.ConfirmCards(1-tp,g)
 		end
 	end
-	if og:IsExists(Card.IsRace,1,nil,RACE_SPELLCASTER) then
+	if #og==1 and og:GetFirst():IsRace(RACE_SPELLCASTER) then
 		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
@@ -128,7 +128,7 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		end
 		Duel.SpecialSummonComplete()
 	end
-	if og:FilterCount(Card.IsRace,nil,RACE_DRAGON)==1 and og:FilterCount(Card.IsRace,nil,RACE_SPELLCASTER)==1 then
+	if #og==2 and og:FilterCount(Card.IsRace,nil,RACE_DRAGON)==1 and og:FilterCount(Card.IsRace,nil,RACE_SPELLCASTER)==1 then
 		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
