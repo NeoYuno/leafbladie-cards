@@ -48,7 +48,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e7)
     --Destroy itself
 	local e8=Effect.CreateEffect(c)
-	e8:SetCategory(CATEGORY_TOGRAVE)
+	e8:SetCategory(CATEGORY_DESTROY)
 	e8:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e8:SetCode(EVENT_PHASE+PHASE_END)
 	e8:SetRange(LOCATION_SZONE)
