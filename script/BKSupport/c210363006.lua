@@ -56,7 +56,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.thfilter(c,fc)
-	return c:IsCode(3113667) or (fc and c:IsType(TYPE_SPELL+TYPE_TRAP) and c.toss_coin and not c:IsCode(id)) and c:IsAbleToHand()
+	return c:IsCode(3113667) or (fc and c.toss_coin and not c:IsCode(id)) and c:IsAbleToHand()
 end
 function s.fieldcond(c)
 	return c:IsFaceup() and c:IsCode(3113667)
