@@ -93,7 +93,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.thfilter(c)
-    return c:IsCode(67048711,210363007) and c:IsAbleToHand()
+    return c:IsCode(67048711,86198326,81171949,210363007) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil) end
@@ -128,13 +128,13 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.filter(c)
-	return c:IsFaceup() and c:IsCode(67048711,210363007)
+	return c:IsFaceup() and c:IsCode(67048711,86198326,81171949,210363007)
 end
 function s.tgcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(s.filter,e:GetHandlerPlayer(),LOCATION_SZONE,0,1,nil)
 end
 function s.atlimit(e,c)
-	return c:IsFaceup() and c:IsCode(67048711,210363007)
+	return c:IsFaceup() and c:IsCode(67048711,86198326,81171949,210363007)
 end
 function s.cpcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(s.filter,e:GetHandlerPlayer(),LOCATION_SZONE,0,2,nil) and rp~=e:GetHandlerPlayer()
@@ -168,5 +168,5 @@ function s.econ(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.efilter(e,te)
 	local c=te:GetHandler()
-	return not c:IsCode(67048711,210363007)
+	return not c:IsCode(67048711,86198326,81171949,210363007)
 end
