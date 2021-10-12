@@ -113,7 +113,7 @@ function s.lkop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:FilterCount(Card.IsCode,nil,CARD_JACK_KNIGHT,CARD_KING_KNIGHT,CARD_QUEEN_KNIGHT)==3 and eg:GetClassCount(Card.GetPreviousCodeOnField)==3
+	return eg:FilterCount(Card.IsCode,nil,CARD_JACK_KNIGHT,CARD_KING_KNIGHT,CARD_QUEEN_KNIGHT)==3 and eg:GetClassCount(Card.GetCode)==3
 end
 function s.spfilter(c,e,tp)
 	return c:IsCode(CARD_JACK_KNIGHT,CARD_KING_KNIGHT,CARD_QUEEN_KNIGHT) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)

@@ -72,16 +72,15 @@ function s.dfilter(c,tpe)
 	return c:IsFaceup() and c:IsType(tpe)
 end
 function s.descost(e,tp,eg,ep,ev,re,r,rp,chk)
-    local rtype=(re:GetActiveType()&0x7)
 	local fg=Group.CreateGroup()
 	for i,pe in ipairs({Duel.IsPlayerAffectedByEffect(tp,210100005)}) do
 		fg:AddCard(pe:GetHandler())
 	end
 	local loc=LOCATION_HAND
 	if #fg>0 then loc=LOCATION_HAND+LOCATION_DECK end
-	if chk==0 then return Duel.IsExistingMatchingCard(s.costfilter,tp,loc,0,1,nil,rtype) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.costfilter,tp,loc,0,1,nil,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local tc=Duel.SelectMatchingCard(tp,s.costfilter,tp,loc,0,1,1,nil,rtype):GetFirst()
+	local tc=Duel.SelectMatchingCard(tp,s.costfilter,tp,loc,0,1,1,nil,tp):GetFirst()
 	if tc:IsLocation(LOCATION_DECK) then
 		local fc=nil
 		if #fg==1 then
