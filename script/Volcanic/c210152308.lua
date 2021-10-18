@@ -42,7 +42,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(s.val)
 		tc:RegisterEffect(e1)
 		--Damage
-		local e2=Effect.CreateEffect(c)
+		local e2=Effect.CreateEffect(e:GetHandler())
 		e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 		e2:SetCode(EVENT_BATTLE_DESTROYING)
 		e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)

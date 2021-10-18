@@ -18,7 +18,7 @@ function s.initial_effect(c)
     c:RegisterEffect(e2)
 end
 function s.spfilter(c,e,tp)
-	return c:IsSetCard(0x32) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
+	return c:IsSetCard(0x32) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
 end
 function s.tgfilter(c)
 	return c:IsSetCard(0xb9) and c:IsAbleToGrave() and (c:IsLocation(LOCATION_HAND) or c:IsFaceup())
@@ -40,7 +40,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.spfilter2(c,e,tp)
-	return c:IsSetCard(0x32) and c:IsLevelAbove(6) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
+	return c:IsSetCard(0x32) and c:IsType(TYPE_MONSTER) and c:IsLevelAbove(6) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
 end
 function s.tgfilter2(c)
 	return c:IsFaceup() and c:IsAbleToGrave()

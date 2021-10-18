@@ -41,7 +41,7 @@ function s.initial_effect(c)
 end
 s.listed_series={0x32}
 function s.disfilter(c)
-	return c:IsSetCard(0x32) and c:IsAbleToGrave()
+	return c:IsSetCard(0x32) and c:IsType(TYPE_MONSTER) and c:IsAbleToGrave()
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) end
