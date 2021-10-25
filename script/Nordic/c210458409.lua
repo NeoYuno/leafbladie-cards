@@ -56,7 +56,7 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 		if tg:IsExists(s.sfilter,1,nil,i,e,tp) then lvt[pc]=i pc=pc+1 end
 	end
 	lvt[pc]=nil
-	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,0))
+	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,1))
 	local lv=Duel.AnnounceNumber(tp,table.unpack(lvt))
 	if cg:FilterCount(s.exfilter,nil,lv)==1 then cg:Remove(s.exfilter,nil,lv) end
 	local rg=aux.SelectUnselectGroup(cg,e,tp,lv,lv,s.rescon,1,tp,HINTMSG_REMOVE)
