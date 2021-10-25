@@ -36,28 +36,39 @@ function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(100)
 	return true
 end
+function s.exfilter(c,lv)
+	return c:IsLevel(lv) and c:IsLocation(LOCATION_DECK)
+end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		if e:GetLabel()~=100 then return false end
 		e:SetLabel(0)
 		local cg=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_EXTRA+LOCATION_GRAVE+LOCATION_MZONE,0,nil)
-		return aux.SelectUnselectGroup(cg,e,tp,1,5,s.rescon,0) and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,#cg)
+		local ct=math.min(5,cg:GetClassCount(Card.GetLocation))
+		return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,ct-1)
 	end
 	local cg=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_EXTRA+LOCATION_GRAVE+LOCATION_MZONE,0,nil)
-	local tg=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil,#cg)
-	local rg1=Group.CreateGroup()
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local rg2=aux.SelectUnselectGroup(cg,e,tp,1,5,s.rescon,1,tp,HINTMSG_REMOVE,cancelcon,breakcon)
-	rg1:Merge(rg2)
-	Duel.Remove(rg1,POS_FACEUP,REASON_COST)
-	e:SetLabel(#rg1)
+	local ct=math.min(5,cg:GetClassCount(Card.GetLocation))
+	local tg=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil,ct)
+	local lvt={}
+	local pc=1
+	for i=1,ct do
+		if tg:IsExists(s.sfilter,1,nil,i,e,tp) then lvt[pc]=i pc=pc+1 end
+	end
+	lvt[pc]=nil
+	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,0))
+	local lv=Duel.AnnounceNumber(tp,table.unpack(lvt))
+	if cg:FilterCount(s.exfilter,nil,lv)==1 then cg:Remove(s.exfilter,nil,lv) end
+	local rg=aux.SelectUnselectGroup(cg,e,tp,lv,lv,s.rescon,1,tp,HINTMSG_REMOVE)
+	Duel.Remove(rg,POS_FACEUP,REASON_COST)
+	Duel.SetTargetParam(lv)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function s.sfilter(c,lv)
-	return c:IsSetCard(0x42) and c:IsType(TYPE_MONSTER) and c:GetLevel()<=lv and c:IsAbleToHand()
+	return c:IsSetCard(0x42) and c:IsType(TYPE_MONSTER) and c:GetLevel()==lv and c:IsAbleToHand()
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
-	local lv=e:GetLabel()
+	local lv=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,s.sfilter,tp,LOCATION_DECK,0,1,1,nil,lv)
     if #g>0 then
