@@ -57,8 +57,9 @@ function s.tg(e,tp,eg,ep,ev,re,r,rp,chk)
     local g1=Duel.GetMatchingGroup(s.tdfilter,tp,LOCATION_REMOVED,0,nil)
     local g2=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_SZONE,LOCATION_SZONE,nil)
     local g3=Duel.GetMatchingGroup(s.tffilter,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE,0,nil)
+    local ft=Duel.GetLocationCount(tp,LOCATION_SZONE)
     if chk==0 then return Duel.IsExistingMatchingCard(s.tdfilter,tp,LOCATION_REMOVED,0,1,nil)
-        and #g1>0 and #g2>0 and aux.SelectUnselectGroup(g3,e,tp,1,99,aux.dncheck,0) end
+        and #g1>0 and #g2>0 and aux.SelectUnselectGroup(g3,e,tp,1,ft,aux.dncheck,0) end
     Duel.SetOperationInfo(0,CATEGORY_TODECK,g1,#g1,tp,LOCATION_REMOVED)
     Duel.SetOperationInfo(0,CATEGORY_DESTROY,g2,#g2,0,LOCATION_SZONE)
 end
@@ -67,7 +68,9 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
     local g2=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_SZONE,LOCATION_SZONE,nil)
     local g3=Duel.GetMatchingGroup(s.tffilter,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE,0,nil)
     if Duel.SendtoDeck(g1,tp,2,REASON_EFFECT)>0 and Duel.Destroy(g2,REASON_EFFECT)>0 and #g3>0 then
-        local sg=aux.SelectUnselectGroup(g3,e,tp,1,5,aux.dncheck,1,tp,HINTMSG_TOFIELD)
+        g3:Merge(Duel.GetOperatedGroup())
+        local ft=Duel.GetLocationCount(tp,LOCATION_SZONE)
+        local sg=aux.SelectUnselectGroup(g3,e,tp,1,ft,aux.dncheck,1,tp,HINTMSG_TOFIELD)
         for tc in aux.Next(sg) do
             Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 			local e1=Effect.CreateEffect(e:GetHandler())

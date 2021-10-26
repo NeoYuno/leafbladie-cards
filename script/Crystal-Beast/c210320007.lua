@@ -85,7 +85,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
     end
 end
 function s.eftg(e,c)
-	return Duel.GetMatchingGroup(aux.FilterFaceupFunction(Card.IsSetCard,0x34),c:GetControler(),LOCATION_SZONE,0,nil)
+	return c:IsFaceup() and c:IsSetCard(0x34) and c:GetSequence()<5
 end
 function s.filter(c,e)
 	return c:IsCode(79856792) and c:IsCanBeEffectTarget(e)
@@ -128,33 +128,31 @@ function s.tfcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(s.cbfilter,tp,LOCATION_REMOVED,0,1,nil,e,tp)
 end
 function s.tfop(e,tp,eg,ep,ev,re,r,rp)
+    local ct=Duel.GetLocationCount(tp,LOCATION_MZONE)+Duel.GetLocationCount(tp,LOCATION_SZONE)
     local g=Duel.GetMatchingGroup(s.cbfilter,tp,LOCATION_REMOVED,0,nil,e,tp)
-    local b1=aux.SelectUnselectGroup(g,e,tp,1,#g,aux.dncheck,0) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-	local b2=aux.SelectUnselectGroup(g,e,tp,1,#g,aux.dncheck,0) and Duel.GetLocationCount(tp,LOCATION_SZONE)>0
-    if not (b1 and b2) or not Duel.SelectYesNo(tp,aux.Stringid(id,5)) then return end
-    local op=nil
-    if b1 and b2 then 
-        op=Duel.SelectOption(tp,aux.Stringid(id,6),aux.Stringid(id,7))
-    elseif b1 and not b2 then 
-        op=Duel.SelectOption(tp,aux.Stringid(id,6))
-    else
-        op=Duel.SelectOption(tp,aux.Stringid(id,7))+1
-    end
-    if op==0 then
-        local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-        if Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) then ft=1 end
-        Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-        local sg=g:Select(tp,1,ft,nil,e,tp)
-        Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
-    else
-        local ft=Duel.GetLocationCount(tp,LOCATION_SZONE)
-        Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
-        local g=Duel.SelectMatchingCard(tp,s.cbfilter,tp,LOCATION_REMOVED,0,1,ft,nil,e,tp)
-        if #g==0 then return end
-        local tc=g:GetFirst()
-        for tc in aux.Next(g) do
-            Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+    if not aux.SelectUnselectGroup(g,e,tp,1,#g,aux.dncheck,0) or not Duel.SelectYesNo(tp,aux.Stringid(id,5)) then return end
+    local sg=aux.SelectUnselectGroup(g,e,tp,1,ct,aux.dncheck,1,tp,HINTMSG_FACEUP)
+    for tc in aux.Next(sg) do
+        local op=nil
+        if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 then 
+            op=Duel.SelectOption(tp,aux.Stringid(id,6),aux.Stringid(id,7))
+        elseif Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then 
+            op=Duel.SelectOption(tp,aux.Stringid(id,6))
+        else
+            op=Duel.SelectOption(tp,aux.Stringid(id,7))+1
         end
-        Duel.RaiseEvent(g,EVENT_CUSTOM+id,e,0,tp,0,0)
-    end
+        if op==0 then
+            Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
+        else
+            Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+			local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetCode(EFFECT_CHANGE_TYPE)
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TURN_SET)
+			e1:SetValue(TYPE_SPELL+TYPE_CONTINUOUS)
+			tc:RegisterEffect(e1)
+		end
+		Duel.RaiseEvent(sg,EVENT_CUSTOM+47408488,e,0,tp,0,0)
+	end
 end

@@ -13,6 +13,7 @@ function s.initial_effect(c)
     e2:SetRange(LOCATION_SZONE)
     e2:SetCountLimit(1)
 	e2:SetCondition(s.rmcon)
+	e2:SetTarget(s.rmtg)
 	e2:SetOperation(s.rmop)
 	c:RegisterEffect(e2)
     --Special Summon
@@ -34,23 +35,35 @@ end
 function s.cbfilter(c)
     return c:IsFaceup() and c:IsSetCard(0x1034)
 end
-function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(aux.AND(Card.IsAbleToRemove,Card.IsFacedown),tp,0,LOCATION_EXTRA,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,0,LOCATION_EXTRA)
+function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,1-tp,LOCATION_DECK)
 end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
-    local g=Duel.GetMatchingGroup(s.cbfilter,tp,LOCATION_ONFIELD,0,nil)
-    local ct=g:GetClassCount(Card.GetCode)
-    local rg=Duel.GetMatchingGroup(aux.AND(Card.IsAbleToRemove,Card.IsFacedown),tp,0,LOCATION_EXTRA,nil)
-    local num={}
-	local pc=1
-	for i=1,ct do
-		num[pc]=i pc=pc+1
+    local g1=Duel.GetMatchingGroup(s.cbfilter,tp,LOCATION_ONFIELD,0,nil)
+    local ct1=g1:GetClassCount(Card.GetCode)
+	local ct2=Duel.GetFieldGroupCount(tp,0,LOCATION_DECK)
+	local ct3=Duel.GetMatchingGroupCount(aux.AND(Card.IsAbleToRemove,Card.IsFacedown),tp,0,LOCATION_EXTRA,nil)
+	if ct1>ct2 then ct1=ct2 end
+	if ct1>ct3 then ct1=ct3 end
+	if ct1==0 then return end
+	if ct3>=ct1 and Duel.IsExistingMatchingCard(aux.FilterFaceupFunction(Card.IsCode,32710364),tp,LOCATION_ONFIELD,0,1,nil)
+	    and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
+		local t={}
+		for i=1,ct1 do t[i]=i end
+		local ac=Duel.AnnounceNumber(tp,table.unpack(t))
+		local g=Duel.GetMatchingGroup(aux.AND(Card.IsAbleToRemove,Card.IsFacedown),tp,0,LOCATION_EXTRA,nil)
+		local sg=g:RandomSelect(tp,ac)
+		Duel.DisableShuffleCheck()
+		Duel.Remove(sg,POS_FACEDOWN,REASON_EFFECT)
+	else
+		local t={}
+		for i=1,ct1 do t[i]=i end
+		local ac=Duel.AnnounceNumber(tp,table.unpack(t))
+		local g=Duel.GetDecktopGroup(1-tp,ac)
+		Duel.DisableShuffleCheck()
+		Duel.Remove(g,POS_FACEDOWN,REASON_EFFECT)
 	end
-	num[pc]=nil
-    local an=Duel.AnnounceNumber(tp,table.unpack(num))
-	local sg=rg:RandomSelect(tp,an)
-    Duel.Remove(sg,POS_FACEDOWN,REASON_EFFECT)
 end
 function s.filter(c,e,tp)
 	return (c:IsFaceup() or c:IsLocation(LOCATION_GRAVE)) and c:IsCode(32710364) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
