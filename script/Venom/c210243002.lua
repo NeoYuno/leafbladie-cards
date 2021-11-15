@@ -28,14 +28,8 @@ function s.initial_effect(c)
 	e2:SetTarget(s.tdtg)
 	e2:SetOperation(s.tdop)
 	c:RegisterEffect(e2)
-	local e2x=e2:Clone()
-	e2x:SetType(EFFECT_TYPE_QUICK_O)
-	e2x:SetCode(EVENT_FREE_CHAIN)
-	e2x:SetHintTiming(0,TIMING_END_PHASE)
-	e2x:SetCondition(s.con2)
-	c:RegisterEffect(e2x)
 	if not GhostBelleTable then GhostBelleTable={} end
-	table.insert(GhostBelleTable,e3)
+	table.insert(GhostBelleTable,e2)
 end
 s.listed_series={0x50}
 s.listed_names={54306223}
