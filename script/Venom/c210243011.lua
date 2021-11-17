@@ -43,12 +43,10 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local ct=Duel.GetMatchingGroupCount(Card.IsRace,tp,LOCATION_GRAVE,0,nil,RACE_REPTILE)
 	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	if ct>0 then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-		local sg=g:Select(tp,ct,ct,nil)
-		local ac=sg:GetFirst()
-		for ac in aux.Next(sg) do
-			ac:AddCounter(COUNTER_VENOM,1)
-        end
+		for i=1,ct do
+			local sg=g:Select(tp,1,1,nil)
+			sg:GetFirst():AddCounter(COUNTER_VENOM,1)
+		end
     end
 end
 function s.repfilter(c,tp)
