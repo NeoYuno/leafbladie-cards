@@ -31,12 +31,12 @@ function s.initial_effect(c)
     e4:SetDescription(aux.Stringid(id,1))
 	e4:SetCategory(CATEGORY_COIN+CATEGORY_DESTROY+CATEGORY_TOHAND)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e4:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
+	e4:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e4:SetCode(EVENT_TO_GRAVE)
-    e4:SetCountLimit(1,id+100)
+    e4:SetCountLimit(1,{id,1})
 	e4:SetCondition(s.descon2)
-	e4:SetTarget(s.destg)
-	e4:SetOperation(s.desop)
+	e4:SetTarget(s.destg2)
+	e4:SetOperation(s.desop2)
 	c:RegisterEffect(e4)
 end
 s.toss_coin=true
@@ -82,12 +82,12 @@ function s.descon2(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	return c:IsReason(REASON_EFFECT) and c:IsReason(REASON_DESTROY)
 end
-function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.destg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_COIN,nil,0,tp,2)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,e:GetHandler(),1,0,0)
 end
-function s.desop(e,tp,eg,ep,ev,re,r,rp)
+function s.desop2(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
 	if #g==0 then return end
 	local c1,c2=Duel.TossCoin(tp,2)

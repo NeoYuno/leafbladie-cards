@@ -6,7 +6,19 @@ function s.initial_effect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON+CATEGORY_DESTROY)
 	e1:SetCountLimit(1,id)
 	c:RegisterEffect(e1)
+	--Add itself from the GY
+	local e2=Effect.CreateEffect(c)
+	e2:SetCategory(CATEGORY_COIN)
+	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetRange(LOCATION_GRAVE)
+	e2:SetCountLimit(1,{id,1})
+	e2:SetCost(s.thcost)
+	e2:SetTarget(s.thtg)
+	e2:SetOperation(s.thop)
+	c:RegisterEffect(e2)
 end
+s.toss_coin=true
+s.listed_names={3113667}
 function s.ffilter(c)
 	return c:IsAttribute(ATTRIBUTE_DARK) and c:IsRace(RACE_MACHINE)
 end
@@ -74,4 +86,30 @@ function s.efilter(e,ct)
 end
 function s.splimit(e,c)
 	return not (c:IsRace(RACE_MACHINE) and c:IsAttribute(ATTRIBUTE_DARK))
+end
+function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.CheckLPCost(tp,1000) end
+	Duel.PayLPCost(tp,1000)
+end
+function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsAbleToHand() end
+	Duel.SetOperationInfo(0,CATEGORY_COIN,nil,0,tp,2)
+end
+function s.thop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local c1,c2=Duel.TossCoin(tp,2)
+	if c:IsRelateToEffect(e) and c:IsAbleToHand() then
+		if c1+c2<2 and Duel.IsEnvironment(3113667) and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
+			local ct=0
+			local res={Duel.GetCoinResult()}
+			for i=1,ev do
+				if res[i]==1 then
+					ct=ct+1
+				end
+			end
+			Duel.SendtoHand(c,nil,REASON_EFFECT)
+		elseif c1+c2==2 then
+			Duel.SendtoHand(c,nil,REASON_EFFECT)
+		end
+	end
 end
