@@ -40,7 +40,6 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 s.toss_coin=true
-s.listed_names={68540058,12503902,210363002}
 function s.splimit(e,se,sp,st)
 	return se:IsHasType(EFFECT_TYPE_ACTIONS)
 end
@@ -48,7 +47,7 @@ function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return not e:GetHandler():IsPublic() end
 end
 function s.eqfilter(c,tp)
-    return c:IsCode(68540058,12503902,210363002) and c:IsControler(tp)
+    return c:IsCode(68540058,12503902,210363001,210363007) and c:IsControler(tp)
 end
 function s.desfilter(c,tp)
 	return c:GetEquipCount()~=0 and c:GetEquipGroup():IsExists(s.eqfilter,1,nil,tp)
