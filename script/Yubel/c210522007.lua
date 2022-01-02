@@ -31,7 +31,7 @@ function s.initial_effect(c)
 end
 s.listed_series={0xf101}
 function s.filter(c,e,tp)
-	return (c:IsAttack(0) and c:IsDefense(0)) or (c:IsAttack(4000) and c:IsDefense(4000)) and c:IsCanBeSpecialSummoned(e,0,tp,true,true)
+	return (c:IsAttack(0) or c:IsAttack(4000)) and (c:IsDefense(0) or c:IsDefense(4000)) and c:IsCanBeSpecialSummoned(e,0,tp,true,true)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and s.filter(chkc,e,tp) end
