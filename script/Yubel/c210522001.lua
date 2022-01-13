@@ -75,39 +75,21 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
         Duel.Summon(tp,sg,true,nil)
     end
     local c=e:GetHandler()
-	local e0=aux.createTempLizardCheck(c)
-	e0:SetCondition(s.spcon)
-	Duel.RegisterEffect(e0,tp)
-	local e1=Effect.CreateEffect(c)
+	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetDescription(aux.Stringid(id,1))
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
+	e1:SetDescription(aux.Stringid(id,1))
 	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-	e1:SetReset(RESET_PHASE+PHASE_END)
-	e1:SetOwnerPlayer(tp)
-	e1:SetCondition(s.spcon)
-    e1:SetTarget(s.splimit)
 	e1:SetTargetRange(1,0)
-	e1:SetTarget(aux.TargetBoolFunction(Card.IsLocation,LOCATION_EXTRA))
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	e1:SetTarget(s.splimit)
 	Duel.RegisterEffect(e1,tp)
-	--lizard check with a reset
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
-	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e2:SetOperation(s.checkop)
-	e2:SetReset(RESET_PHASE+PHASE_END)
-	Duel.RegisterEffect(e2,tp)
 end
 function s.spcon(e)
 	return Duel.GetFlagEffect(e:GetOwnerPlayer(),id)>0
 end
-function s.splimit(e,c,sump,sumtype,sumpos,targetp,se)
-	return (sumtype&SUMMON_TYPE_LINK)==SUMMON_TYPE_LINK
-end
-function s.checkop(e,tp,eg,ep,ev,re,r,rp)
-	if eg:IsExists(Card.IsPreviousLocation,1,nil,LOCATION_EXTRA) then
-		Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
-	end
+function s.splimit(e,c,tp,sumtp,sumpos)
+	return c:IsLinkMonster() and not c:IsRace(RACE_FIEND) and (sumtp&SUMMON_TYPE_LINK)==SUMMON_TYPE_LINK
 end
 function s.regop(e,tp,eg,ep,ev,re,r,rp)
 	local e2=Effect.CreateEffect(e:GetHandler())
