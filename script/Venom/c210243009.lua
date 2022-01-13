@@ -1,7 +1,7 @@
 --Venom Bog
 local s,id=GetID()
 function s.initial_effect(c)
-	--activate
+	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
@@ -35,13 +35,31 @@ function s.filter(c,tp)
     local tp=c:GetControler()
 	return c:IsCode(54306223) and c:GetActivateEffect() and c:GetActivateEffect():IsActivatable(tp,true,true)
 end
+function s.thfilter(c)
+	return c:IsSetCard(0x50) and c:IsMonster() and c:IsAbleToHand()
+end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
-	local g=Duel.GetMatchingGroup(s.filter,tp,LOCATION_DECK,0,nil,tp)
-	if #g>0 and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
-		local tc=g:Select(tp,1,1,nil):GetFirst()
-		aux.PlayFieldSpell(tc,e,tp,eg,ep,ev,re,r,rp)
+	local g1=Duel.GetMatchingGroup(s.filter,tp,LOCATION_DECK,0,nil)
+	local g2=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil)
+	local b1=#g1>0
+	local b2=#g2>0 and Duel.IsEnvironment(54306223)
+	if (b1 or b2) and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
+		local op=aux.SelectEffect(tp,
+		{b1,aux.Stringid(id,1)},
+		{b2,aux.Stringid(id,2)})
+		if op==1 then 
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
+			local g=Duel.GetMatchingGroup(s.filter,tp,LOCATION_DECK,0,nil)
+			local sg=g:Select(tp,1,1,nil):GetFirst()
+			aux.PlayFieldSpell(sg,e,tp,eg,ep,ev,re,r,rp)
+		else
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+			local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK,0,nil)
+			local sg=g:Select(tp,1,1,nil):GetFirst()
+			Duel.SendtoHand(sg,nil,REASON_EFFECT)
+			Duel.ConfirmCards(1-tp,sg)
+		end
     end
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)

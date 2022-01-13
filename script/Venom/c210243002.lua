@@ -115,4 +115,11 @@ function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 		end,
 		aux.Stringid(id,4))
 	end
+	local dg=Duel.GetMatchingGroup(nil,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	if Duel.IsEnvironment(54306223) and #dg>0 and Duel.SelectYesNo(tp,aux.Stringid(id,5)) then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+		local sg=dg:Select(tp,1,1,nil)
+		Duel.HintSelection(sg)
+		sg:GetFirst():AddCounter(COUNTER_VENOM,1)
+	end
 end
