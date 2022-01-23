@@ -10,6 +10,17 @@ function s.initial_effect(c)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
+	--Change ATK/DEF
+	local e2=Effect.CreateEffect(c)
+	e2:SetCategory(CATEGORY_ATKCHANGE+CATEGORY_DEFCHANGE)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e2:SetProperty(EFFECT_FLAG_DELAY)
+	e2:SetCode(EVENT_TO_GRAVE)
+	e2:SetCountLimit(1,id)
+	e2:SetCondition(s.con)
+	e2:SetTarget(s.tg)
+	e2:SetOperation(s.op)
+	c:RegisterEffect(e2)
 end
 function s.filter(c)
     return c:IsFaceup() and c:IsAttackPos() and c:IsType(TYPE_EFFECT) and c:IsCanChangePosition() and not c:IsType(TYPE_TRAPMONSTER)
@@ -59,4 +70,30 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.eftg(e,c)
 	return c:IsType(TYPE_TRAPMONSTER)
+end
+function s.con(e,tp,eg,ep,ev,re,r,rp)
+	return (e:GetHandler():IsReason(REASON_EFFECT) and re:IsActivated() and re:IsActiveType(TYPE_SPELL+TYPE_TRAP))
+	    or (e:GetHandler():IsReason(REASON_COST) and re:IsActivated() and re:IsActiveType(TYPE_SPELL+TYPE_TRAP))
+end
+function s.cfilter(c)
+	return c:IsFaceup() and c:GetAttack()>0 and c:GetDefense()>0
+end
+function s.tg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,0,LOCATION_MZONE,1,nil) end
+end
+function s.op(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATKDEF)
+	local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,0,LOCATION_MZONE,1,1,nil)
+	if #g>0 then
+		Duel.HintSelection(g)
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_SET_ATTACK_FINAL)
+		e1:SetValue(0)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+		g:GetFirst():RegisterEffect(e1)
+		local e2=e1:Clone()
+		e2:SetCode(EFFECT_SET_DEFENSE_FINAL)
+		g:GetFirst()::RegisterEffect(e2)
+	end
 end
