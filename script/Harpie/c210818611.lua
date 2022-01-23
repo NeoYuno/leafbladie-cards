@@ -7,7 +7,7 @@ function s.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCountLimit(1, id)
-	e1:SetCondition(s.condition)
+	e1:SetCost(s.handcost)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
@@ -23,43 +23,25 @@ function s.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e3:SetCode(EVENT_DESTROYED)
 	e3:SetProperty(EFFECT_FLAG_DELAY)
-	e3:SetCountLimit(1, id+100)
+	e3:SetCountLimit(1,{id,1})
 	e3:SetCondition(s.spcon)
 	e3:SetTarget(s.sptg)
 	e3:SetOperation(s.spop)
 	c:RegisterEffect(e3)
-    aux.GlobalCheck(s,function()
-		local ge1=Effect.CreateEffect(c)
-		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge1:SetCode(EVENT_SPSUMMON_SUCCESS)
-		ge1:SetOperation(s.checkop)
-		Duel.RegisterEffect(ge1, 0)
-		local ge2=ge1:Clone()
-		ge2:SetCode(EVENT_SUMMON_SUCCESS)
-		Duel.RegisterEffect(ge2, 0)
-	end)
-end
-function s.checkop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=eg:GetFirst()
-	for tc in aux.Next(eg) do
-		Duel.RegisterFlagEffect(tc:GetSummonPlayer(),id,RESET_PHASE+PHASE_END,0,1)
-	end
 end
 --Activate
-function s.condition(e, tp, eg, ep, ev, re, r, rp)
-	return Duel.GetFlagEffect(1-tp, id)>0
-end
 function s.target(e, tp, eg, ep, ev, re, r, rp, chk)
+	local ct=Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)
 	if chk==0 then return Duel.GetLocationCount(tp, LOCATION_MZONE)>0
-		and Duel.IsPlayerCanSpecialSummonMonster(tp, id+1, 0x64, TYPES_TOKEN, 1300, 1400, 4, RACE_WINGEDBEAST, ATTRIBUTE_WIND) end
-	local ct=Duel.GetFlagEffect(1-tp, id)
+		and Duel.IsPlayerCanSpecialSummonMonster(tp, id+1, 0x64, TYPES_TOKEN, 1300, 1400, 4, RACE_WINGEDBEAST, ATTRIBUTE_WIND) 
+	    and ct>0 end
 	if Duel.IsPlayerAffectedByEffect(tp, CARD_BLUEEYES_SPIRIT) then ct=1 end
 	Duel.SetOperationInfo(0, CATEGORY_TOKEN, nil, ct, tp, 0)
 	Duel.SetOperationInfo(0, CATEGORY_SPECIAL_SUMMON, nil, ct, tp, 0)
 end
 function s.activate(e, tp, eg, ep, ev, re, r, rp)
 	local ft=Duel.GetLocationCount(tp, LOCATION_MZONE)
-	local ct=Duel.GetFlagEffect(1-tp, id)
+	local ct=Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)
 	if ft>ct then ft=ct end
 	if ft<=0 then return end
 	if Duel.IsPlayerAffectedByEffect(tp, CARD_BLUEEYES_SPIRIT) then ft=1 end
@@ -99,7 +81,19 @@ function s.splimit(e, c)
 end
 --Act in hand
 function s.handcon(e)
-	return Duel.GetFieldGroupCount(e:GetHandlerPlayer(), LOCATION_ONFIELD, 0)==0
+	return Duel.GetFieldGroupCount(e:GetHandlerPlayer(), LOCATION_ONFIELD, 0)==0 and Duel.IsExistingMatchingCard(s.cfilter,e:GetHandlerPlayer(),LOCATION_HAND,0,1,e:GetHandler())
+end
+function s.cfilter(c)
+	return c:IsSetCard(0x64) and not c:IsPublic()
+end
+function s.handcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	if e:GetHandler():IsStatus(STATUS_ACT_FROM_HAND) then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
+		local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_HAND,0,1,1,e:GetHandler())
+		Duel.ConfirmCards(1-tp,g)
+		Duel.ShuffleHand(tp)
+	end
 end
 --Special summon
 function s.spcon(e, tp, eg, ep, ev, re, r, rp)

@@ -20,7 +20,7 @@ function s.initial_effect(c)
     e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
     e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_GRAVE)
-	e2:SetCountLimit(1, id+100)
+	e2:SetCountLimit(1,{id,1})
 	e2:SetTarget(s.atktg)
 	e2:SetOperation(s.atkop)
 	c:RegisterEffect(e2)
@@ -28,7 +28,7 @@ end
 s.listed_series={0x64}
 --Link material
 function s.matfilter(c, lc, stype, tp)
-    return c:IsSetCard(0x64, lc, stype, tp) and not c:IsType(TYPE_LINK, lc, stype, tp)
+    return c:IsSetCard(0x64, lc, stype, tp) and not c:IsType(TYPE_LINK, lc, stype, tp) and c:IsRace(RACE_WINGEDBEAST)
 end
 --Special summon
 function s.spfilter(c,e,tp)
