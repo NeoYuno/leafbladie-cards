@@ -94,6 +94,6 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
 		g:GetFirst():RegisterEffect(e1)
 		local e2=e1:Clone()
 		e2:SetCode(EFFECT_SET_DEFENSE_FINAL)
-		g:GetFirst()::RegisterEffect(e2)
+		g:GetFirst():RegisterEffect(e2)
 	end
 end
