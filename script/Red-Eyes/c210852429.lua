@@ -14,7 +14,7 @@ end
 s.listed_names={210852443}
 s.listed_series={0x3b}
 function s.tdfilter(c)
-	return c:IsSetCard(0x3b) and c:IsAbleToDeck()
+	return c:IsSetCard(0x3b) and c:HasLevel() and c:IsAbleToDeck()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return Duel.IsExistingMatchingCard(s.tdfilter,tp,LOCATION_GRAVE,0,1,nil)
