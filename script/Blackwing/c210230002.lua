@@ -21,6 +21,7 @@ function s.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e2:SetTargetRange(1,0)
 	e2:SetLabel(0)
+	e2:SetCondition(s.damcon)
 	e2:SetValue(s.damval)
 	c:RegisterEffect(e2)
     --Reduce atk
@@ -29,12 +30,11 @@ function s.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
     e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetRange(LOCATION_MZONE)
-    e3:SetCountLimit(1)
     e3:SetTarget(s.target)
 	e3:SetOperation(s.operation)
 	c:RegisterEffect(e3)
 end
-s.listed_names={}
+s.listed_names={9012916}
 s.listed_series={0x33}
 function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_SYNCHRO)
@@ -47,15 +47,21 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	if not c:IsFaceup() or not c:IsRelateToEffect(e) then return end
     local g=Duel.GetMatchingGroup(Card.IsType,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil,TYPE_SYNCHRO)
 	local ct=g:GetClassCount(Card.GetCode)
+	local atk=ct*700
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_UPDATE_ATTACK)
-	e1:SetValue(ct*700)
+	e1:SetValue(atk)
 	e1:SetReset(RESET_EVENT+RESETS_STANDARD_DISABLE)
 	c:RegisterEffect(e1)
     if c:GetMaterial():IsExists(s.atkfilter,1,nil,c) then
-        Duel.Damage(1-tp,ct*700,REASON_EFFECT)
+		Duel.Damage(tp,atk//2,REASON_EFFECT,true)
+		Duel.Damage(1-tp,atk//2,REASON_EFFECT,true)
+		Duel.RDComplete()
     end
+end
+function s.damcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(Card.IsCode,tp,LOCATION_GRAVE,0,1,nil,9012916)
 end
 function s.damval(e,re,val,r,rp,rc)
 	local tp=e:GetHandlerPlayer()
