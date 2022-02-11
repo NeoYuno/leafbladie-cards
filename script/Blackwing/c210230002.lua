@@ -60,8 +60,8 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.RDComplete()
     end
 end
-function s.damcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(Card.IsCode,tp,LOCATION_GRAVE,0,1,nil,9012916)
+function s.damcon(e)
+	return Duel.IsExistingMatchingCard(Card.IsCode,e:GetHandlerPlayer(),LOCATION_GRAVE,0,1,nil,9012916)
 end
 function s.damval(e,re,val,r,rp,rc)
 	local tp=e:GetHandlerPlayer()
