@@ -8,7 +8,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--Add itself from the GY
 	local e2=Effect.CreateEffect(c)
-	e2:SetCategory(CATEGORY_COIN)
+	e2:SetCategory(CATEGORY_COIN+CATEGORY_DAMAGE)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCountLimit(1,{id,1})
@@ -94,12 +94,14 @@ end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToHand() end
 	Duel.SetOperationInfo(0,CATEGORY_COIN,nil,0,tp,2)
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,0)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local c1,c2=Duel.TossCoin(tp,2)
+	local ct=c1+c2
 	if c:IsRelateToEffect(e) and c:IsAbleToHand() then
-		if c1+c2<2 and Duel.IsEnvironment(3113667) and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
+		if c1+c2<2 and Duel.IsExistingMatchingCard(aux.FilterFaceupFunction(Card.IsCode,3113667),tp,LOCATION_FZONE,0,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 			local ct=0
 			local res={Duel.GetCoinResult()}
 			for i=1,ev do
@@ -107,9 +109,15 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 					ct=ct+1
 				end
 			end
+			Duel.Damage(1-tp,1000,REASON_EFFECT)
+			Duel.BreakEffect()
 			Duel.SendtoHand(c,nil,REASON_EFFECT)
-		elseif c1+c2==2 then
-			Duel.SendtoHand(c,nil,REASON_EFFECT)
+		else
+			Duel.Damage(1-tp,ct*500,REASON_EFFECT)
+			if ct==2 then
+				Duel.BreakEffect()
+				Duel.SendtoHand(c,nil,REASON_EFFECT)
+			end
 		end
 	end
 end

@@ -105,13 +105,28 @@ function s.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.damop(e,tp,eg,ep,ev,re,r,rp)
 	local c1,c2=Duel.TossCoin(tp,2)
-	if c1+c2==0 then return end
-	if c1+c2>0 then
+	if c1+c2<2 and Duel.IsExistingMatchingCard(aux.FilterFaceupFunction(Card.IsCode,3113667),tp,LOCATION_FZONE,0,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
+		local ct=0
+		local res={Duel.GetCoinResult()}
+		for i=1,ev do
+			if res[i]==1 then
+				ct=ct+1
+			end
+		end
 		local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 		Duel.Damage(p,d,REASON_EFFECT)
-		if c1+c2>1 and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
+		if Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
 			Duel.BreakEffect()
 			Duel.SendtoHand(e:GetHandler(),nil,REASON_EFFECT)
+		end
+	else
+		if c1+c2>0 then
+			local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+			Duel.Damage(p,d,REASON_EFFECT)
+			if c1+c2==2 and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
+				Duel.BreakEffect()
+				Duel.SendtoHand(e:GetHandler(),nil,REASON_EFFECT)
+			end
 		end
 	end
 end

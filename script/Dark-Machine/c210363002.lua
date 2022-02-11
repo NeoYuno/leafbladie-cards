@@ -14,7 +14,6 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
     --Search
 	local e2=Effect.CreateEffect(c)
-    e2:SetDescription(aux.Stringid(id,0))
 	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetProperty(EFFECT_FLAG_DELAY)
@@ -28,7 +27,6 @@ function s.initial_effect(c)
     c:RegisterEffect(e3)
     --Destroy cards on field
 	local e4=Effect.CreateEffect(c)
-    e4:SetDescription(aux.Stringid(id,1))
 	e4:SetCategory(CATEGORY_COIN+CATEGORY_DESTROY+CATEGORY_TOHAND)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e4:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
@@ -92,13 +90,28 @@ function s.desop2(e,tp,eg,ep,ev,re,r,rp)
 	if #g==0 then return end
 	local c1,c2=Duel.TossCoin(tp,2)
 	local ct=c1+c2
-	if ct==0 then return end
-	if ct>#g then ct=#g end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local dg=g:Select(tp,1,ct,nil)
-	Duel.HintSelection(dg)
-	if Duel.Destroy(dg,REASON_EFFECT)>0 and c1+c2==2 then
-		Duel.BreakEffect()
-		Duel.SendtoHand(e:GetHandler(),tp,REASON_EFFECT)
+	if c1+c2<2 and Duel.IsExistingMatchingCard(aux.FilterFaceupFunction(Card.IsCode,3113667),tp,LOCATION_FZONE,0,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
+		local ct=0
+		local res={Duel.GetCoinResult()}
+		for i=1,ev do
+			if res[i]==1 then
+				ct=ct+1
+			end
+		end
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+		local dg=g:Select(tp,1,2,nil)
+		Duel.HintSelection(dg)
+		if Duel.Destroy(dg,REASON_EFFECT)>0 then
+			Duel.BreakEffect()
+			Duel.SendtoHand(e:GetHandler(),tp,REASON_EFFECT)
+		end
+	else
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+		local dg=g:Select(tp,1,ct,nil)
+		Duel.HintSelection(dg)
+		if Duel.Destroy(dg,REASON_EFFECT)>0 and c1+c2==2 then
+			Duel.BreakEffect()
+			Duel.SendtoHand(e:GetHandler(),tp,REASON_EFFECT)
+		end
 	end
 end

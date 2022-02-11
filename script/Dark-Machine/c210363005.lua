@@ -23,7 +23,6 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 	--Search
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(id,0))
 	e3:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
@@ -153,19 +152,72 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local c1,c2=Duel.TossCoin(tp,2)
-	if c1+c2==2 then
-		local cg=c:GetColumnGroup()
-		local g=Duel.GetMatchingGroup(s.desfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,c,cg)
-		Duel.Destroy(g,REASON_EFFECT)
-	elseif c1+c2==1 then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-		local g1=Duel.SelectMatchingCard(tp,nil,tp,LOCATION_ONFIELD,0,1,1,nil)
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-		local g2=Duel.SelectMatchingCard(tp,nil,tp,0,LOCATION_ONFIELD,1,1,nil)
-		g1:Merge(g2)
-		Duel.Destroy(g1,REASON_EFFECT)
+	local sel
+	local b1=s.tg1(e,tp,eg,ep,ev,re,r,rp,0)
+	local b2=s.tg2(e,tp,eg,ep,ev,re,r,rp,0)
+	if (b1 or b2 or c:IsDestructable()) and Duel.IsExistingMatchingCard(aux.FilterFaceupFunction(Card.IsCode,3113667),tp,LOCATION_FZONE,0,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+		local ops={}
+		local opval={}
+		local off=1
+		if b1 then
+			ops[off]=aux.Stringid(id,3)
+			opval[off-1]=3
+			off=off+1
+		end
+		if b2 then
+			ops[off]=aux.Stringid(id,4)
+			opval[off-1]=4
+			off=off+1
+		end
+		if c:IsDestructable() then
+			ops[off]=aux.Stringid(id,5)
+			opval[off-1]=5
+			off=off+1
+		end
+		local op=Duel.SelectOption(tp,table.unpack(ops))
+		local sel=opval[op]
+		if sel==3 then
+			s.op1(e,tp,eg,ep,ev,re,r,rp)
+		elseif sel==4 then
+			s.op2(e,tp,eg,ep,ev,re,r,rp)
+		else
+			Duel.Destroy(e:GetHandler(),REASON_EFFECT)
+		end
 	else
-		Duel.Destroy(e:GetHandler(),REASON_EFFECT)
+		sel=Duel.TossCoin(tp,2)
+		if sel==2 then
+			if not s.tg1(e,tp,eg,ep,ev,re,r,rp,chk) then return end
+			s.op1(e,tp,eg,ep,ev,re,r,rp)
+		elseif sel==1 then
+			if not s.tg2(e,tp,eg,ep,ev,re,r,rp,chk) then return end
+			s.op2(e,tp,eg,ep,ev,re,r,rp)
+		else
+			Duel.Destroy(e:GetHandler(),REASON_EFFECT)
+		end
 	end
+end
+--2 Heads: Destroy all other cards in this card's column. 
+function s.tg1(e,tp,eg,ep,ev,re,r,rp,chk)
+	local cg=e:GetHandler():GetColumnGroup()
+	local g=Duel.GetMatchingGroup(s.desfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,e:GetHandler(),cg)
+	if chk==0 then return #g>0 end
+end
+function s.op1(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local cg=c:GetColumnGroup()
+	local g=Duel.GetMatchingGroup(s.desfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,c,cg)
+	Duel.Destroy(g,REASON_EFFECT)
+end
+--1 Head: Destroy 1 card on each side of the field.
+function s.tg2(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_ONFIELD,0)>0
+		and Duel.GetFieldGroupCount(tp,0,LOCATION_ONFIELD)>0 end
+end
+function s.op2(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+	local g1=Duel.SelectMatchingCard(tp,nil,tp,LOCATION_ONFIELD,0,1,1,nil)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+	local g2=Duel.SelectMatchingCard(tp,nil,tp,0,LOCATION_ONFIELD,1,1,nil)
+	g1:Merge(g2)
+	Duel.Destroy(g1,REASON_EFFECT)
 end
