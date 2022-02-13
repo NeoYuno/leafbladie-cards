@@ -36,60 +36,15 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local sel
-	local b1=s.tg1(e,tp,eg,ep,ev,re,r,rp,0)
-	local b2=s.tg2(e,tp,eg,ep,ev,re,r,rp,0)
-	local b3=s.tg3(e,tp,eg,ep,ev,re,r,rp,0)
-	if (b1 or b2 or b3) and Duel.IsExistingMatchingCard(aux.FilterFaceupFunction(Card.IsCode,3113667),tp,LOCATION_FZONE,0,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
-		local ops={}
-		local opval={}
-		local off=1
-		if b1 then
-			ops[off]=aux.Stringid(id,1)
-			opval[off-1]=1
-			off=off+1
-		end
-		if b2 then
-			ops[off]=aux.Stringid(id,2)
-			opval[off-1]=2
-			off=off+1
-		end
-		if b3 then
-			ops[off]=aux.Stringid(id,3)
-			opval[off-1]=3
-			off=off+1
-		end
-		local op=Duel.SelectOption(tp,table.unpack(ops))
-		local sel=opval[op]
-		if sel==1 then
-			s.op1(e,tp,eg,ep,ev,re,r,rp)
-		elseif sel==2 then
-			s.op2(e,tp,eg,ep,ev,re,r,rp)
-		else
-			s.op3(e,tp,eg,ep,ev,re,r,rp)
-		end
+	local c1,c2=Duel.TossCoin(tp,2)
+	local ct=c1+c2
+	if ct==2 then
+		s.op1(e,tp,eg,ep,ev,re,r,rp)
+	elseif ct==1 then
+		s.op2(e,tp,eg,ep,ev,re,r,rp)
 	else
-		sel=Duel.TossCoin(tp,2)
-		if sel==2 then
-			if not s.tg1(e,tp,eg,ep,ev,re,r,rp,chk) then return end
-			s.op1(e,tp,eg,ep,ev,re,r,rp)
-		elseif sel==1 then
-			if not s.tg2(e,tp,eg,ep,ev,re,r,rp,chk) then return end
-			s.op2(e,tp,eg,ep,ev,re,r,rp)
-		else
-			if not s.tg3(e,tp,eg,ep,ev,re,r,rp,chk) then return end
-			s.op3(e,tp,eg,ep,ev,re,r,rp)
-		end
+		s.op3(e,tp,eg,ep,ev,re,r,rp)
 	end
-end
-function s.tg1(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)>0 end
-end
-function s.tg2(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)>0 end
-end
-function s.tg3(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)>0 end
 end
 function s.op1(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetFieldGroup(tp,0,LOCATION_HAND)
