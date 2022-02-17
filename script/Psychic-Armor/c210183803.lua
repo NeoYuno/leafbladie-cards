@@ -8,6 +8,7 @@ function s.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetCategory(CATEGORY_EQUIP)
     e1:SetRange(LOCATION_HAND)
+	e1:SetCondition(s.eqcon)
 	e1:SetTarget(s.eqtg)
 	e1:SetOperation(s.eqop)
 	c:RegisterEffect(e1)
@@ -31,6 +32,9 @@ end
 s.listed_names={210183801}
 s.listed_series={0xf102}
 --Equip
+function s.eqcon(e,tp,eg,ep,ev,re,r,rp)
+    return e:GetHandler():CheckUniqueOnField(e:GetHandlerPlayer())
+end
 function s.filter(c)
 	return c:IsFaceup() and c:IsCode(210183801)
 end

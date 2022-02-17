@@ -8,6 +8,7 @@ function s.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetCategory(CATEGORY_EQUIP)
     e1:SetRange(LOCATION_HAND)
+	e1:SetCondition(s.eqcon)
 	e1:SetTarget(s.eqtg)
 	e1:SetOperation(s.eqop)
 	c:RegisterEffect(e1)
@@ -28,6 +29,9 @@ function s.initial_effect(c)
 end
 s.listed_names={210183801}
 s.listed_series={0xf102}
+function s.eqcon(e,tp,eg,ep,ev,re,r,rp)
+    return e:GetHandler():CheckUniqueOnField(e:GetHandlerPlayer())
+end
 function s.filter(c)
 	return c:IsFaceup() and c:IsCode(210183801)
 end
@@ -69,6 +73,7 @@ function s.eqop(e,tp,eg,ep,ev,re,r,rp)
 		e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		e3:SetCode(EVENT_PRE_DAMAGE_CALCULATE)
 		e3:SetRange(LOCATION_SZONE)
+		e3:SetCondition(s.con)
 		e3:SetTarget(s.tg)
 		e3:SetOperation(s.regop)
 		c:RegisterEffect(e3)
@@ -99,6 +104,9 @@ function s.indct(e,re,r,rp)
 	else return 0 end
 end
 --Reduce battle damage
+function s.con(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetBattleDamage(tp)>0
+end
 function s.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
