@@ -1,5 +1,6 @@
 --Big Bang Dragon Blow
 local s,id=GetID()
+Duel.LoadScript ("specific_functions.lua")
 function s.initial_effect(c)
 	c:EnableReviveLimit()
 	--spsummon condition
@@ -17,6 +18,7 @@ function s.initial_effect(c)
 	e2:SetTarget(s.eqtg)
 	e2:SetOperation(s.eqop)
 	c:RegisterEffect(e2)
+	aux.AddHermosEquipLimit(c,nil,function(tc,c,tp) tc:IsOnField() end,s.equipop,e2)
 end
 s.material_race=RACE_MACHINE
 function s.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -34,15 +36,10 @@ function s.eqop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoGrave(c,REASON_EFFECT)
 		return
 	end
-	Duel.Equip(tp,c,tc)
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_EQUIP_LIMIT)
-	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-	e1:SetValue(s.eqlimit)
-	e1:SetLabelObject(tc)
-	e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-	c:RegisterEffect(e1)
+	s.equipop(c,e,tp,tc)
+end
+function s.equipop(c,e,tp,tc)
+	if not aux.EquipAndLimitRegister(c,e,tp,tc) then return end
     --Granted effect
     local e2=Effect.CreateEffect(c)
     e2:SetType(EFFECT_TYPE_QUICK_O)
@@ -60,9 +57,6 @@ function s.eqop(e,tp,eg,ep,ev,re,r,rp)
     e3:SetTarget(s.eftg)
     e3:SetLabelObject(e2)
     c:RegisterEffect(e3)
-end
-function s.eqlimit(e,c)
-	return c==e:GetLabelObject()
 end
 function s.eftg(e,c)
 	return e:GetHandler():GetEquipTarget()==c
