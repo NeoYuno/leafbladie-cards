@@ -26,6 +26,15 @@ function s.initial_effect(c)
 	e3:SetCondition(s.ndcon)
 	e3:SetOperation(s.ndop)
 	c:RegisterEffect(e3)
+	--Cannot be destroyed by card effects
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_FIELD)
+	e4:SetCode(EFFECT_INDESTRUCTABLE_COUNT)
+	e4:SetRange(LOCATION_SZONE)
+	e4:SetTargetRange(LOCATION_ONFIELD,0)
+	e4:SetTarget(s.indtg)
+	e4:SetValue(s.indct)
+	c:RegisterEffect(e4)
 end
 s.listed_names={210183801}
 s.listed_series={0xf102}
@@ -58,15 +67,6 @@ function s.eqop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(s.eqlimit)
 		e1:SetLabelObject(tc)
 		c:RegisterEffect(e1)
-        --Cannot be destroyed by card effects
-		local e2=Effect.CreateEffect(c)
-		e2:SetType(EFFECT_TYPE_FIELD)
-		e2:SetCode(EFFECT_INDESTRUCTABLE_COUNT)
-		e2:SetRange(LOCATION_SZONE)
-		e2:SetTargetRange(LOCATION_ONFIELD,0)
-		e2:SetTarget(s.indtg)
-		e2:SetValue(s.indct)
-		c:RegisterEffect(e2)
         --Reduce battle damage
 		local e3=Effect.CreateEffect(c)
 		e3:SetCategory(CATEGORY_DESTROY)
