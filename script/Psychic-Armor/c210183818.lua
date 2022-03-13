@@ -72,7 +72,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
             if #g2>0 then
                 Duel.BreakEffect()
                 Duel.Equip(tp,g2:GetFirst(),tc)
-                local e1=Effect.CreateEffect(c)
+                local e1=Effect.CreateEffect(e:GetHandler())
                 e1:SetType(EFFECT_TYPE_SINGLE)
                 e1:SetCode(EFFECT_EQUIP_LIMIT)
                 e1:SetReset(RESET_EVENT+RESETS_STANDARD)
@@ -91,8 +91,10 @@ function s.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
     local g=Duel.GetMatchingGroup(s.eqfilter,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE,0,nil)
 	if not tc or tc:IsFacedown() or not tc:IsRelateToEffect(e) then return end
+    local ct=Duel.GetLocationCount(tp,LOCATION_SZONE)
+    if ct<=0 then return end
 	if g:GetClassCount(Card.GetCode)>0 then
-		local sg=aux.SelectUnselectGroup(g,e,tp,1,4,aux.dncheck,1,tp,HINTMSG_EQUIP)
+		local sg=aux.SelectUnselectGroup(g,e,tp,1,ct,aux.dncheck,1,tp,HINTMSG_EQUIP)
         if #sg==0 then return end
         for eq in aux.Next(sg) do
             Duel.Equip(tp,eq,tc,true)

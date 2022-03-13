@@ -74,7 +74,7 @@ function s.repfilter(c,tp,rp)
 	return c:IsFaceup() and c:IsSetCard(0xf102) and c:IsOnField() and c:IsControler(tp)
 		and not c:IsReason(REASON_REPLACE) and (c:IsReason(REASON_BATTLE) or c:IsReason(REASON_EFFECT))
 end
-function s.desfilter(c)
+function s.desfilter2(c)
 	return c:IsSetCard(0xf102) and c:IsType(TYPE_MONSTER) and c:IsDestructable()
 end
 function s.repval(e,c)
@@ -82,10 +82,10 @@ function s.repval(e,c)
 end
 function s.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return eg:IsExists(s.repfilter,1,nil,tp,rp) and
-		Duel.IsExistingMatchingCard(s.desfilter,tp,LOCATION_DECK,0,1,eg) end
+		Duel.IsExistingMatchingCard(s.desfilter2,tp,LOCATION_DECK,0,1,eg) end
 	if Duel.SelectEffectYesNo(tp,e:GetHandler(),96) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESREPLACE)
-		local tg=Duel.SelectMatchingCard(tp,s.desfilter,tp,LOCATION_DECK,0,1,1,eg)
+		local tg=Duel.SelectMatchingCard(tp,s.desfilter2,tp,LOCATION_DECK,0,1,1,eg)
 		e:SetLabelObject(tg:GetFirst())
 		return true
 	end
