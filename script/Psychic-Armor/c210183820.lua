@@ -104,7 +104,7 @@ function s.cpop(e,tp,eg,ep,ev,re,r,rp)
 		local cid=0
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECTFLAGH)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_SINGLE_RANGE)
 		e1:SetCode(EFFECT_ADD_CODE)
 		e1:SetValue(code)
         e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END+RESET_OPPO_TURN)
