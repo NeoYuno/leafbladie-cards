@@ -36,7 +36,7 @@ function s.desfilter(c,e,tp)
 	return not c:IsSummonableCard() and Duel.IsExistingMatchingCard(s.spfilter,tp,0,LOCATION_GRAVE,1,nil,e,tp,c:GetAttack())
 end
 function s.spfilter(c,e,tp,atk)
-	return c:GetAttack()<atk and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:GetAttack()<atk or c:IsAttack(0) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,1-tp)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and s.desfilter(chkc,e,tp) end
@@ -52,10 +52,11 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
 		if Duel.Destroy(tc,REASON_EFFECT)>0 and Duel.Damage(1-tp,tc:GetBaseAttack()/2,REASON_EFFECT)>0 then
+			if Duel.GetLocationCount(1-tp,LOCATION_MZONE)<=0 then return end
             Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
             local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,0,LOCATION_GRAVE,1,1,nil,e,tp,tc:GetAttack())
             if #g>0 then
-                Duel.SpecialSummon(g,0,tp,tp,true,false,POS_FACEUP)
+                Duel.SpecialSummon(g,0,tp,1-tp,true,false,POS_FACEUP)
             end
 		end
 	end
