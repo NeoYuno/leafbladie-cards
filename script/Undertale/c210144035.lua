@@ -85,7 +85,7 @@ function s.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
 	local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_ONFIELD,0,1,1,nil)
 	Duel.SendtoHand(g,nil,REASON_COST)
-    e:SetLabel(g:GetFirst():GetCode())
+    e:SetLabelObject(g:GetFirst())
 end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -98,7 +98,7 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
         e1:SetValue(s.atkval)
         e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
         c:RegisterEffect(e1)
-        if not e:GetLabel():IsCode(210144053) then return end
+        if not e:GetLabelObject():IsCode(210144053) then return end
         local g=Duel.GetFieldGroup(tp,0,LOCATION_MZONE)
         for tc in aux.Next(g) do
             local e1=Effect.CreateEffect(c)
