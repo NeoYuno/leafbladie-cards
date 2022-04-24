@@ -59,7 +59,7 @@ end
 function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return eg:IsExists(s.cfilter,1,nil,tp) end
     if #eg==1 then
-        Duel.DiscardHand(tp,eg,#eg,#eg,REASON_COST+REASON_DISCARD)
+        Duel.DiscardHand(tp,eg:GetFirst(),1,1,REASON_COST+REASON_DISCARD)
     elseif #eg>1 then
         local g=eg:Filter(s.cfilter,nil,tp)
         Duel.SendtoGrave(g,REASON_COST+REASON_DISCARD)
