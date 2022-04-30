@@ -39,11 +39,10 @@ function s.initial_effect(c)
     --Destroy replace
 	local e6=Effect.CreateEffect(c)
 	e6:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-	e6:SetCode(EFFECT_DESTROY_REPLACE)
 	e6:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_NO_TURN_RESET)
+	e6:SetCode(EFFECT_DESTROY_REPLACE)
 	e6:SetRange(LOCATION_MZONE)
 	e6:SetTarget(s.reptg)
-	e6:SetCountLimit(1)
 	c:RegisterEffect(e6)
 end
 s.counter_place_list={COUNTER_LV}
@@ -88,7 +87,6 @@ function s.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if Duel.SelectEffectYesNo(tp,c,96) then
         local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetProperty(EFFECT_FLAG_COPY_INHERIT)
 		e1:SetCode(EFFECT_UPDATE_DEFENSE)
 		e1:SetValue(-500)
         e1:SetReset(RESET_EVENT+RESETS_STANDARD_DISABLE)

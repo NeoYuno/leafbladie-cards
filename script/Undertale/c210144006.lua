@@ -10,6 +10,7 @@ function s.initial_effect(c)
 	e1:SetRange(LOCATION_HAND)
 	e1:SetCountLimit(1,id,EFFECT_COUNT_CODE_OATH)
 	e1:SetCondition(s.spcon)
+	e1:SetValue(1)
 	c:RegisterEffect(e1)
     --Search
 	local e2=Effect.CreateEffect(c)
@@ -32,7 +33,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 s.counter_place_list={COUNTER_LV}
-s.listed_names={210144001,210144020}
+s.listed_names={210144001,210144018}
 function s.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
@@ -41,10 +42,10 @@ function s.spcon(e,c)
 end
 
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetSummonType()==SUMMON_TYPE_SPECIAL+1
+	return e:GetHandler():IsSummonType(SUMMON_TYPE_SPECIAL+1)
 end
 function s.thfilter(c)
-	return c:IsCode(210144020) and c:IsAbleToHand()
+	return c:IsCode(210144018) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) end

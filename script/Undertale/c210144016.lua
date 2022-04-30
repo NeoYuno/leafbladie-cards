@@ -65,7 +65,7 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,e:GetHandler(),1,0,0)
 end
 function s.spfilter(c,e,tp)
-	return c:IsSetCard(0xf4b) and c:IsLevelAbove(7) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0xf4b) and c:IsLevelAbove(7) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -87,7 +87,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
        Duel.BreakEffect()
        Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
        local sg=g:Select(tp,1,1,nil)
-       Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
+       Duel.SpecialSummon(sg,0,tp,tp,true,false,POS_FACEUP)
      end
 		end
 	end

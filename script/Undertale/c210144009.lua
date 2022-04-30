@@ -47,13 +47,9 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoHand(sg,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,sg)
 		Duel.ShuffleHand(tp)
-	else
-		Duel.SendtoGrave(sg,REASON_RULE)
+		g:Sub(sg)
 	end
-	ct=ct-1
-	if ct>0 then
-		Duel.SortDecktop(tp,tp,ct)
-	end
+	Duel.SortDecktop(tp,tp,#g)
 end
 
 function s.ctcon(e,tp,eg,ep,ev,re,r,rp)
