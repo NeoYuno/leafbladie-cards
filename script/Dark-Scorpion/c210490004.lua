@@ -69,7 +69,7 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetDecktopGroup(1-tp,ct)
 	if #g==ct then
 		Duel.DisableShuffleCheck()
-		Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
+		Duel.Remove(g,POS_FACEDOWN,REASON_EFFECT)
 	end
 end
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
