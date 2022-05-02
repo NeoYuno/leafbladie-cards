@@ -108,7 +108,7 @@ end
 
 function s.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:GetCounter(COUNTER_LV)>=19 then return end
+	if c:GetCounter(COUNTER_LV)>=19 or not (c:IsFaceup() and c:IsLocation(LOCATION_MZONE)) then return end
 	local ct=19-c:GetCounter(COUNTER_LV)
 	local t={}
 	for i=1,ct do t[i]=i end
