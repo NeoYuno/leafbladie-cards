@@ -51,7 +51,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
     local g1=Duel.GetMatchingGroup(s.thfilter1,tp,LOCATION_DECK,0,nil)
     local g2=Duel.GetMatchingGroup(s.thfilter2,tp,LOCATION_DECK,0,nil)
-	if c:IsRelateToEffect(e) and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)>0 and #g>0 and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
+	if c:IsRelateToEffect(e) and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)>0 and #g1>0 and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
         Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
         local sg=g1:Select(tp,1,1,nil)
         if #sg==0 then return end
