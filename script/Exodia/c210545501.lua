@@ -99,7 +99,7 @@ end
 function s.retop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=eg:GetFirst()
 	for tc in aux.Next(eg) do
-		if tc:IsReason(REASON_EFFECT) and not (re and re:GetHandler()==e:GetHandler()) then
+		if not (re and re:GetHandler()==e:GetHandler()) then
 			Duel.SendtoDeck(tc,nil,2,REASON_EFFECT+REASON_REDIRECT)
 		end
 	end
