@@ -29,7 +29,7 @@ s.counter_place_list={COUNTER_LV}
 s.listed_names={210144001}
 s.listed_series={0x0f4a}
 function s.thfilter(c)
-	return (c:GetType()==TYPE_EQUIP or c:GetType()==TYPE_CONTINUOUS) and c:IsSetCard(0x0f4a) and c:IsAbleToHand()
+	return (c:GetType()==TYPE_SPELL+TYPE_EQUIP or c:GetType()==TYPE_SPELL+TYPE_CONTINUOUS) and c:IsSetCard(0x0f4a) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil) end

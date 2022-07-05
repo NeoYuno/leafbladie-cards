@@ -35,7 +35,7 @@ end
 s.listed_names={210144001}
 s.listed_series={0x0f4a}
 function s.ovfilter(c,tp,lc)
-	return c:IsFaceup() and c:IsSummonCode(lc,SUMMON_TYPE_XYZ,tp,58069384) and c:GetOverlayCount()==0
+	return c:IsFaceup() and c:IsSummonCode(lc,SUMMON_TYPE_XYZ,tp,210144029) and c:GetOverlayCount()==0
 	    and Duel.IsExistingMatchingCard(aux.FilterFaceupFunction(Card.IsCode,210144001),tp,LOCATION_MZONE,0,1,nil)
 end
 function s.econ(e)

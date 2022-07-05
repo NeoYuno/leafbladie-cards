@@ -34,7 +34,7 @@ function s.discon(e,tp,eg,ep,ev,re,r,rp)
 	if phase~=PHASE_DAMAGE or Duel.IsDamageCalculated() then return false end
 	local a=Duel.GetAttacker()
 	local d=Duel.GetAttackTarget()
-	return d~=nil and d:IsFaceup() and (a:GetCounter(COUNTER_LV)<11) and (a:GetControler()==tp and a:IsCode(210144001) and a:IsRelateToBattle())
+	return d~=nil and d:IsFaceup() and (a:GetControler()==tp and a:IsCode(210144001) and a:IsRelateToBattle())
 end
 function s.discost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
@@ -44,7 +44,6 @@ function s.disop(e,tp,eg,ep,ev,re,r,rp,chk)
 	local a=Duel.GetAttacker()
   local d=Duel.GetAttackTarget()
 	if not a:IsRelateToBattle() or not d:IsRelateToBattle() then return end
-  if not (a:GetCounter(COUNTER_LV)<11) then return end
 	a:AddCounter(COUNTER_LV,9)
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)

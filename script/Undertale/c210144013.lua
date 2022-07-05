@@ -28,10 +28,7 @@ s.listed_series={0x0f4a}
 function s.costfilter(c)
     return c:IsSetCard(0x0f4a) and c:IsType(TYPE_SPELL) and c:IsAbleToGraveAsCost()
 end
-function s.filter1(c)
-	return c:IsCode(210144012) and c:IsAbleToHand()
-end
-function s.filter2(c,e,tp)
+function s.filter(c,e,tp)
 	return c:IsCode(210144012) and (c:IsAbleToHand() or c:IsCanBeSpecialSummoned(e,0,tp,false,false))
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -48,9 +45,9 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
-	if not Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_DECK,0,1,nil,e,tp) then return end
+	if not Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK,0,1,nil,e,tp) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SELECT)
-	local tc=Duel.SelectMatchingCard(tp,s.filter2,tp,LOCATION_DECK,0,1,1,nil,e,tp):GetFirst()
+	local tc=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_DECK,0,1,1,nil,e,tp):GetFirst()
 	if tc then
 		if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 
 		and e:GetLabelObject():IsCode(210144053) and tc:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP)
@@ -62,14 +59,17 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
     local e1=Effect.CreateEffect(e:GetHandler())
-    e1:SetDescription(3302)
 	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetCode(EFFECT_CANNOT_TRIGGER)
-	e1:SetProperty(EFFECT_FLAG_OATH+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_CLIENT_HINT)
-	e1:SetTarget(aux.TargetBoolFunction(Card.IsCode,210144012))
+	e1:SetCode(EFFECT_CANNOT_ACTIVATE)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE)
 	e1:SetTargetRange(1,0)
+	e1:SetValue(s.actlimit)
 	e1:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e1,tp)
+end
+function s.actlimit(e,re,tp)
+	local rc=re:GetHandler()
+	return re:IsActiveType(TYPE_MONSTER) and rc:IsCode(210144012)
 end
 
 function s.ctcon(e,tp,eg,ep,ev,re,r,rp)

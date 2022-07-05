@@ -15,7 +15,6 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
   --Half Target or player
  local e3=Effect.CreateEffect(c)
- e3:SetDescription(aux.Stringid(id,0))
  e3:SetType(EFFECT_TYPE_QUICK_O)
  e3:SetCategory(CATEGORY_ATKCHANGE)
  e3:SetCode(EVENT_FREE_CHAIN)
@@ -27,8 +26,7 @@ function s.initial_effect(c)
  c:RegisterEffect(e3)
  --Return itself to hand
  local e4=Effect.CreateEffect(c)
- e4:SetDescription(aux.Stringid(id,1))
- e4:SetCategory(CATEGORY_TOHAND+CATEGORY_SPECIAL_SUMMON)
+ e4:SetCategory(CATEGORY_TOHAND)
  e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_QUICK_O)
  e4:SetCode(EVENT_FREE_CHAIN)
  e4:SetProperty(EFFECT_TYPE_SINGLE)
@@ -37,8 +35,6 @@ function s.initial_effect(c)
  e4:SetTarget(s.thtg)
  e4:SetOperation(s.thop)
  c:RegisterEffect(e4)
- if not AshBlossomTable then AshBlossomTable={} end
- table.insert(AshBlossomTable,e1)
 end
 function s.hafcon(e,tp,eg,ep,ev,re,r,rp)
 	return (Duel.GetCurrentPhase()>=PHASE_BATTLE_START and Duel.GetCurrentPhase()<=PHASE_BATTLE)
@@ -65,30 +61,21 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,e:GetHandler(),1,0,0)
 end
 function s.spfilter(c,e,tp)
-	return c:IsSetCard(0xf4b) and c:IsLevelAbove(7) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
+	return c:IsSetCard(0xf4b) and c:IsAttackAbove(2800) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
+end
+function s.selchk(tp)
+	return Duel.IsExistingMatchingCard(aux.FilterFaceupFunction(Card.IsCode,210144001),tp,LOCATION_MZONE,0,1,nil)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and Duel.SendtoHand(c,nil,REASON_EFFECT)>0 then
-		Duel.ConfirmCards(1-tp,c)
-    if Duel.IsExistingMatchingCard(aux.FilterFaceupFunction(Card.IsCode,210144001),tp,LOCATION_ONFIELD,0,1,nil) then
-		 local g=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_DECK,0,nil,e,tp)
-		 if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and #g>0
-			and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
-			Duel.BreakEffect()
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-			local sg=g:Select(tp,1,1,nil)
-			Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
-     end
-    else
-      local g=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_HAND,0,nil,e,tp)
-      if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and #g>0
-       and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
-       Duel.BreakEffect()
-       Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-       local sg=g:Select(tp,1,1,nil)
-       Duel.SpecialSummon(sg,0,tp,tp,true,false,POS_FACEUP)
-     end
+	local loc=LOCATION_HAND
+	if Duel.IsExistingMatchingCard(aux.FilterFaceupFunction(Card.IsCode,210144001),tp,LOCATION_MZONE,0,1,nil) then loc=loc+LOCATION_DECK end
+	if not c:IsFaceup() or not c:IsRelateToEffect(e) then return end
+	if Duel.SendtoHand(c,nil,REASON_EFFECT)>0 and Duel.IsExistingMatchingCard(s.spfilter,tp,loc,0,1,nil,e,tp) and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,loc,0,1,1,nil,e,tp)
+		if #g>0 then 
+			Duel.SpecialSummon(g,0,tp,tp,true,false,POS_FACEUP)
 		end
 	end
 end

@@ -33,7 +33,7 @@ function s.ngcon(e,tp,eg,ep,ev,re,r,rp)
 		and Duel.IsChainNegatable(ev)
 end
 function s.ngfilter(c)
-	return c:IsSetCard(0x0f4a) and c:IsType(TYPE_SPELL) and (c:IsFaceup() and c:IsLocation(LOCATION_HAND)) and c:IsAbleToGraveAsCost()
+	return c:IsSetCard(0x0f4a) and c:IsType(TYPE_SPELL) and (c:IsFaceup() or c:IsLocation(LOCATION_HAND)) and c:IsAbleToGraveAsCost()
 end
 function s.ngcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.ngfilter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,nil) end

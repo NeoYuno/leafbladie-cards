@@ -21,6 +21,7 @@ function s.initial_effect(c)
 	e2:SetRange(LOCATION_MZONE)
     e2:SetCountLimit(1)
 	e2:SetCost(s.atkcost)
+	e2:SetTarget(s.atktg)
 	e2:SetOperation(s.atkop)
 	c:RegisterEffect(e2)
     --Counter
@@ -40,7 +41,7 @@ function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_LINK)
 end
 function s.spfilter(c,e,tp,zone)
-	return c:IsSetCard(0x0f4d) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE,tp,zone)
+	return c:IsSetCard(0x0f4d) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,tp,zone)
 end
 function s.spcheck(sg,e,tp,mg)
 	return sg:GetClassCount(Card.GetLocation)==#sg and  sg:GetClassCount(Card.GetCode)==#sg
@@ -63,7 +64,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local sg=Duel.GetMatchingGroup(aux.NecroValleyFilter(s.spfilter),tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE,0,nil,e,tp,zone)
 	if #sg==0 then return end
 	local rg=aux.SelectUnselectGroup(sg,e,tp,3,3,s.spcheck,1,tp,HINTMSG_SPSUMMON)
-	Duel.SpecialSummon(rg,0,tp,tp,true,false,POS_FACEUP_DEFENSE,zone)
+	Duel.SpecialSummon(rg,0,tp,tp,true,false,POS_FACEUP,zone)
     for tc in aux.Next(rg) do
         --Cannot be used as Link Material
         local e1=Effect.CreateEffect(c)
@@ -86,6 +87,9 @@ function s.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_ONFIELD,0,1,1,nil)
 	Duel.SendtoHand(g,nil,REASON_COST)
     e:SetLabelObject(g:GetFirst())
+end
+function s.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():GetLinkedGroupCount()>0 end
 end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
