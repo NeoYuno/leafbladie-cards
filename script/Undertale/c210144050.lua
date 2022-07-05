@@ -54,9 +54,9 @@ function s.atkop(e,tp,eg,ep,ev,re,r,rp)
         e2:SetType(EFFECT_TYPE_SINGLE)
         e2:SetCode(EFFECT_UPDATE_ATTACK)
         if Duel.IsExistingMatchingCard(aux.FilterFaceupFunction(Card.IsCode,210144027),tp,LOCATION_MZONE,0,1,nil) then
-            e2:SetValue(atk*400)
+            e2:SetValue(atk*-400)
         else
-            e2:SetValue(atk*200)
+            e2:SetValue(atk*-200)
         end
         e2:SetReset(RESET_EVENT+RESETS_STANDARD)
         tc:RegisterEffect(e2)

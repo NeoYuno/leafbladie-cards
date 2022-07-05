@@ -72,22 +72,24 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) then ft=1 end
 	ft=math.min(ft,Duel.GetLocationCount(tp,LOCATION_MZONE))
 	if ft<=0 or not Duel.IsPlayerCanSpecialSummonMonster(tp,210144076,0x0f4a,TYPES_TOKEN,500,500,1,RACE_MACHINE,ATTRIBUTE_DARK) then return end
-	local i=0
+	local g=Group.CreateGroup()
 	repeat
-		local token=Duel.CreateToken(tp,210144076+i)
+		local token=Duel.CreateToken(tp,210144076)
 		Duel.SpecialSummonStep(token,0,tp,tp,false,false,POS_FACEUP)
 		ft=ft-1
-		i=(i+1)%4
+		g:AddCard(token)
 	until ft<=0 or not Duel.SelectYesNo(tp,aux.Stringid(id,0))
-    local e1=Effect.CreateEffect(c)
-    e1:SetDescription(3312)
-    e1:SetType(EFFECT_TYPE_SINGLE)
-    e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CLIENT_HINT)
-    e1:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
-    e1:SetValue(1)
-    e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-    token:RegisterEffect(e1,true)
-	Duel.SpecialSummonComplete()
+	for tc in aux.Next(g) do
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetDescription(3312)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CLIENT_HINT)
+		e1:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
+		e1:SetValue(1)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+		tc:RegisterEffect(e1)
+		Duel.SpecialSummonComplete()
+	end
 end
 
 function s.rmcon(e,tp,eg,ep,ev,re,r,rp)

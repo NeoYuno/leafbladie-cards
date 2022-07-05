@@ -17,7 +17,7 @@ s.counter_place_list={COUNTER_LV}
 s.listed_names={210144001}
 s.listed_series={0x0f4a}
 function s.filter(c)
-	return c:IsFaceup() and c:IsCode(210144001) and c:GetCounter(COUNTER_LV)>0
+	return c:IsFaceup() and c:IsCode(210144001)
 end
 function s.tdfilter(c)
 	return c:IsSetCard(0x0f4a) and c:IsMonster() and c:IsAbleToDeck()
@@ -26,7 +26,7 @@ function s.spfilter(c,e,tp)
 	return c:IsSetCard(0x0f4a) and c:IsMonster() and c:IsLevelBelow(5) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.chkfilter(c)
-	return c:IsSetCard(0x0f4a) and c:IsMonster() and c:IsLocation(LOCATION_DECK)
+	return c:IsSetCard(0x0f4a) and c:IsMonster() and c:IsLocation(LOCATION_DECK+LOCATION_EXTRA)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local g=Duel.GetMatchingGroup(s.tdfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil)

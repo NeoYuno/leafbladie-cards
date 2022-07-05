@@ -5,13 +5,13 @@ function s.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
     e1:SetCategory(CATEGORY_DRAW)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
-	e1:SetCode(EVENT_ATTACK_ANNOUNCE)
-	e1:SetCondition(s.atcon)
+	e1:SetCode(EVENT_BE_BATTLE_TARGET)
+	e1:SetCondition(s.atkcon)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.atop)
 	c:RegisterEffect(e1)
 	local e2=e1:Clone()
-	e2:SetCode(EVENT_CHAINING)
+	e2:SetCode(EVENT_BECOME_TARGET)
 	e2:SetCondition(s.tgcon)
 	e2:SetTarget(s.target)
 	e2:SetOperation(s.tgop)
@@ -31,14 +31,11 @@ function s.initial_effect(c)
 end
 s.listed_names={210144001}
 s.listed_series={0x0f4a}
-function s.atcon(e,tp,eg,ep,ev,re,r,rp)
-	if tp==Duel.GetTurnPlayer() then return false end
-	local at=Duel.GetAttackTarget()
-	if at then
-		local ag=eg:GetFirst():GetAttackableTarget()
-		return ag
-	end
-	return false
+function s.tgfilter(c,tp)
+	return c:IsFaceup() and c:IsLocation(LOCATION_MZONE) and c:IsControler(tp)
+end
+function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(s.tgfilter,1,nil,tp)
 end
 function s.atop(e,tp,eg,ep,ev,re,r,rp)
 	local ct=Duel.Draw(tp,1,REASON_EFFECT)
@@ -52,12 +49,7 @@ function s.atop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.tgcon(e,tp,eg,ep,ev,re,r,rp)
-	if e==re or not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then return false end
-	local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)
-	if not g or #g~=1 then return false end
-	local tc=g:GetFirst()
-	e:SetLabelObject(tc)
-	return tc:IsLocation(LOCATION_MZONE)
+	return rp==1-tp and #eg==1 and eg:IsExists(s.tgfilter,1,nil,tp)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end

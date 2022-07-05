@@ -77,8 +77,7 @@ function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	return re and re:GetHandler():IsCode(210144001)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local c=e:GetHandler()
-	if chk==0 then return Duel.IsExistingMatchingCard(nil,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,c) end
+	if chk==0 then return true end
 	local g=Duel.GetMatchingGroup(nil,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,c)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,#g,0,0)
 end
@@ -88,21 +87,21 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Destroy(g,REASON_EFFECT)
     local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
 	e1:SetTargetRange(1,0)
 	e1:SetTarget(s.sumlimit)
 	Duel.RegisterEffect(e1,tp)
-	local e1=e1:Clone()
-	e1:SetCode(EFFECT_CANNOT_SUMMON)
-	Duel.RegisterEffect(e1,tp)
 	local e2=e1:Clone()
-	e2:SetCode(EFFECT_CANNOT_FLIP_SUMMON)
+	e2:SetCode(EFFECT_CANNOT_SUMMON)
 	Duel.RegisterEffect(e2,tp)
+	local e3=e1:Clone()
+	e3:SetCode(EFFECT_CANNOT_FLIP_SUMMON)
+	Duel.RegisterEffect(e3,tp)
 	aux.RegisterClientHint(c,nil,tp,1,0,aux.Stringid(id,0),nil)
 end
 function s.sumlimit(e,c,sump,sumtype,sumpos,targetp,se)
-	return c:IsCode(id)
+	return not c:IsCode(id)
 end
 
 function s.efilter(e,te)
