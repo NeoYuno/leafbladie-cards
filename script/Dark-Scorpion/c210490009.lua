@@ -23,7 +23,6 @@ function s.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_LEAVE_FIELD)
 	e3:SetCondition(s.tdcon)
-    e3:SetCost(s.tdcost)
 	e3:SetTarget(s.tdtg)
 	e3:SetOperation(s.tdop)
 	c:RegisterEffect(e3)
@@ -57,22 +56,19 @@ function s.tdcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	return c:IsPreviousPosition(POS_FACEUP) and not c:IsLocation(LOCATION_DECK)
 end
-function s.tdcost(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return Duel.GetMatchingGroupCount(aux.NOT(Card.IsPublic),tp,0,LOCATION_HAND,nil)>0 end
-	local g=Duel.GetMatchingGroup(aux.NOT(Card.IsPublic),tp,0,LOCATION_HAND,nil)
-	if #g>0 then
-		Duel.ConfirmCards(tp,g)
-		Duel.ShuffleHand(1-tp)
-	end
-end
 function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return Duel.GetMatchingGroupCount(Card.IsAbleToDeck,tp,0,LOCATION_HAND,nil)>0 end
-    Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,1-tp,LOCATION_HAND)
+    if chk==0 then return Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)>0 end
+	Duel.SetTargetPlayer(tp)
+	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,1-tp,LOCATION_HAND)
 end
 function s.tdop(e,tp,eg,ep,ev,re,r,rp)
-    local hg=Duel.GetMatchingGroup(Card.IsAbleToDeck,tp,0,LOCATION_HAND,nil)
-	if #hg>0 then
-		local sg=hg:RandomSelect(tp,1)
+	local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
+	local g=Duel.GetFieldGroup(p,0,LOCATION_HAND)
+	if #g>0 then
+		Duel.ConfirmCards(p,g)
+		Duel.Hint(HINT_SELECTMSG,p,HINTMSG_TODECK)
+		local sg=g:Select(p,1,1,nil)
 		Duel.SendtoDeck(sg,nil,2,REASON_EFFECT)
+		Duel.ShuffleHand(1-p)
 	end
 end

@@ -27,7 +27,7 @@ function s.initial_effect(c)
 	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
     e4:SetProperty(EFFECT_FLAG_DELAY)
 	e4:SetCode(EVENT_CHANGE_POS)
-	e4:SetRange(LOCATION_MZONE)
+	e4:SetRange(LOCATION_SZONE)
 	e4:SetCountLimit(1,id)
 	e4:SetCondition(s.spcon)
 	e4:SetTarget(s.sptg)
@@ -81,14 +81,14 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,e,tp)
 	if #g>0 then
 		local tc=g:GetFirst()
-		if Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP)>0 then
+		if Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then
 			Duel.Equip(tp,c,tc)
 			Duel.SpecialSummonComplete()
             if tc:IsCode(48768179) and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
                 --Double ATK
                 local e1=Effect.CreateEffect(c)
                 e1:SetType(EFFECT_TYPE_SINGLE)
-                e1:SetCode(EFFECT_SET_ATTACK_FINAL)
+                e1:SetCode(EFFECT_SET_BASE_ATTACK)
                 e1:SetValue(tc:GetBaseAttack()*2)
                 e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END+RESET_OPPO_TURN)
                 tc:RegisterEffect(e1)
