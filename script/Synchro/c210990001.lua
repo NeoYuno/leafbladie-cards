@@ -101,8 +101,17 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
     local g=Duel.GetMatchingGroup(s.drfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil)
     local ct=g:GetClassCount(Card.GetCode)
+	local t={}
+	for i=1,ct do t[i]=i end
     if ct>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
-        Duel.BreakEffect()
-        Duel.Draw(tp,ct,REASON_EFFECT)
+		if ct==1 then
+			Duel.BreakEffect()
+			Duel.Draw(tp,ct,REASON_EFFECT)
+		else
+			Duel.Hint(HINTMSG_NUMBER,tp,HINT_NUMBER)
+			local ac=Duel.AnnounceNumber(tp,table.unpack(t))
+			Duel.BreakEffect()
+			Duel.Draw(tp,ac,REASON_EFFECT)
+		end
     end
 end

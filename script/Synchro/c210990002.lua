@@ -84,7 +84,6 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	tc:SetMaterial(nil)
 	if not Duel.SpecialSummon(tc,SUMMON_TYPE_SYNCHRO,tp,tp,false,false,POS_FACEUP) then return end
 	local ct=Duel.GetMatchingGroup(s.atkfilter,tp,LOCATION_MZONE,0,nil):GetCount()
-	Debug.Message(ct)
 	--Multiple attacks
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_SINGLE)
