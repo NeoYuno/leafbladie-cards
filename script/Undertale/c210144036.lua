@@ -58,7 +58,7 @@ end
 s.listed_names={210144001,210144076}
 s.listed_series={0x0f4a}
 function s.condition(e)
-	return Duel.IsExistingMatchingCard(aux.FilterFaceupFunction(Card.IsCode,210144001),tp,LOCATION_MZONE,0,1,nil)
+	return Duel.IsExistingMatchingCard(aux.FilterFaceupFunction(Card.IsCode,210144001),e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil)
 end
 
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)

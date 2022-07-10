@@ -50,7 +50,7 @@ function s.ngtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function s.ngop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
+	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) and e:GetLabelObject():IsCode(210144053) then
 		Duel.SendtoDeck(eg,nil,2,REASON_EFFECT)
 	end
 end
@@ -64,7 +64,24 @@ function s.cttg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local at=Duel.GetAttacker()
-	if at:IsRelateToBattle() and at:IsFaceup() then
+	if at:GetCounter(COUNTER_LV)==19 or not (at:IsFaceup() and at:IsLocation(LOCATION_MZONE)) then return end
+	if at:IsCanAddCounter(COUNTER_LV,6) then
+		Duel.Hint(HINT_CARD,tp,id)
 		at:AddCounter(COUNTER_LV,6)
-    end
+	elseif at:IsCanAddCounter(COUNTER_LV,5) then
+		Duel.Hint(HINT_CARD,tp,id)
+		at:AddCounter(COUNTER_LV,5)
+	elseif at:IsCanAddCounter(COUNTER_LV,4) then
+		Duel.Hint(HINT_CARD,tp,id)
+		at:AddCounter(COUNTER_LV,4)
+	elseif at:IsCanAddCounter(COUNTER_LV,3) then
+		Duel.Hint(HINT_CARD,tp,id)
+		at:AddCounter(COUNTER_LV,3)
+	elseif at:IsCanAddCounter(COUNTER_LV,2) then
+		Duel.Hint(HINT_CARD,tp,id)
+		at:AddCounter(COUNTER_LV,2)
+	elseif at:IsCanAddCounter(COUNTER_LV,1) then
+		Duel.Hint(HINT_CARD,tp,id)
+		at:AddCounter(COUNTER_LV,1)
+	end
 end

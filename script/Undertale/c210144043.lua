@@ -32,17 +32,25 @@ function s.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
     e:SetLabelObject(g:GetFirst())
 end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
-    local at=Duel.GetAttacker()
+    local a=Duel.GetAttacker()
+    local d=Duel.GetAttackTarget()
+    local 
     local tc=e:GetLabelObject()
-	if at:IsFaceup() and at:IsRelateToBattle() then
-        at:AddCounter(COUNTER_LV,tc:GetLevel())
+	if a:IsFaceup() and a:IsRelateToBattle() then
+        local ct=0
+        if a:GetCounter(COUNTER_LV)>0 then
+            ct=19-tc:GetLevel()
+        else
+            ct=tc:GetLevel()
+        end
+        a:AddCounter(COUNTER_LV,ct)
         if tc:IsCode(210144025) then
             local e1=Effect.CreateEffect(e:GetHandler())
             e1:SetType(EFFECT_TYPE_SINGLE)
             e1:SetCode(EFFECT_UPDATE_ATTACK)
             e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-            e1:SetValue(-at:GetAttack())
-            at:RegisterEffect(e1)
+            e1:SetValue(-d:GetAttack())
+            d:RegisterEffect(e1)
         end
 	end
 end

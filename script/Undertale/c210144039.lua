@@ -44,7 +44,8 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SendtoDeck(g,nil,2,REASON_EFFECT)
 	local og=Duel.GetOperatedGroup()
 	local fct=og:FilterCount(s.chkfilter,nil)
-	if #g>0 and fct>0 and ft>0 and #spg>0 and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
+	spg:Merge(og)
+	if fct>0 and ft>0 and #spg>0 and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
 		local sc=aux.SelectUnselectGroup(spg,e,tp,1,fct,aux.dncheck,1,tp,HINTMSG_SPSUMMON)
 		Duel.BreakEffect()
 		Duel.SpecialSummon(sc,0,tp,tp,false,false,POS_FACEUP)

@@ -19,9 +19,10 @@ function s.initial_effect(c)
     e2:SetType(EFFECT_TYPE_QUICK_O)
     e2:SetCode(EVENT_FREE_CHAIN)
     e2:SetRange(LOCATION_MZONE)
+	e2:SetCost(s.discost)
     e2:SetTarget(s.distg)
     e2:SetOperation(s.disop)
-    c:RegisterEffect(e2)
+    c:RegisterEffect(e2,false,REGISTER_FLAG_DETACH_XMAT)
     --To deck
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
@@ -45,8 +46,12 @@ function s.efilter(e,te)
 	return te:GetOwner()~=e:GetOwner()
 end
 
+function s.discost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
+	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
+end
 function s.disfilter(c)
-	return c:IsFaceup() and aux.disfilter2(c)
+	return c:IsFaceup() and aux.disfilter3(c)
 end
 function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingTarget(s.disfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end

@@ -108,16 +108,67 @@ end
 
 function s.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:GetCounter(COUNTER_LV)>=19 or not (c:IsFaceup() and c:IsLocation(LOCATION_MZONE)) then return end
-	local ct=9-c:GetCounter(COUNTER_LV)
-	local t={}
-	for i=1,ct do t[i]=i end
-    Duel.Hint(HINT_CARD,tp,id)
-	Duel.Hint(HINTMSG_NUMBER,tp,HINT_NUMBER)
-	local ac=Duel.AnnounceNumber(tp,table.unpack(t))
-    if c:IsFaceup() then
-        c:AddCounter(COUNTER_LV,ac)
-    end
+	if c:GetCounter(COUNTER_LV)==19 or not (c:IsFaceup() and c:IsLocation(LOCATION_MZONE)) then return end
+	if c:IsCanAddCounter(COUNTER_LV,9) then
+		local t={}
+		for i=1,9 do t[i]=i end
+		Duel.Hint(HINT_CARD,tp,id)
+	    Duel.Hint(HINTMSG_NUMBER,tp,HINT_NUMBER)
+		local ct=Duel.AnnounceNumber(tp,table.unpack(t))
+		c:AddCounter(COUNTER_LV,ct)
+	elseif c:IsCanAddCounter(COUNTER_LV,8) then
+		local t={}
+	    for i=1,8 do t[i]=i end
+		Duel.Hint(HINT_CARD,tp,id)
+	    Duel.Hint(HINTMSG_NUMBER,tp,HINT_NUMBER)
+		local ct=Duel.AnnounceNumber(tp,table.unpack(t))
+		c:AddCounter(COUNTER_LV,ct)
+	elseif c:IsCanAddCounter(COUNTER_LV,7) then
+		local t={}
+	    for i=1,7 do t[i]=i end
+		Duel.Hint(HINT_CARD,tp,id)
+	    Duel.Hint(HINTMSG_NUMBER,tp,HINT_NUMBER)
+		local ct=Duel.AnnounceNumber(tp,table.unpack(t))
+		c:AddCounter(COUNTER_LV,ct)
+	elseif c:IsCanAddCounter(COUNTER_LV,6) then
+		local t={}
+	    for i=1,6 do t[i]=i end
+		Duel.Hint(HINT_CARD,tp,id)
+	    Duel.Hint(HINTMSG_NUMBER,tp,HINT_NUMBER)
+		local ct=Duel.AnnounceNumber(tp,table.unpack(t))
+		c:AddCounter(COUNTER_LV,ct)
+	elseif c:IsCanAddCounter(COUNTER_LV,5) then
+		local t={}
+	    for i=1,5 do t[i]=i end
+		Duel.Hint(HINT_CARD,tp,id)
+	    Duel.Hint(HINTMSG_NUMBER,tp,HINT_NUMBER)
+		local ct=Duel.AnnounceNumber(tp,table.unpack(t))
+		c:AddCounter(COUNTER_LV,ct)
+	elseif c:IsCanAddCounter(COUNTER_LV,4) then
+		local t={}
+	    for i=1,4 do t[i]=i end
+		Duel.Hint(HINT_CARD,tp,id)
+	    Duel.Hint(HINTMSG_NUMBER,tp,HINT_NUMBER)
+		local ct=Duel.AnnounceNumber(tp,table.unpack(t))
+		c:AddCounter(COUNTER_LV,ct)
+	elseif c:IsCanAddCounter(COUNTER_LV,3) then
+		local t={}
+	    for i=1,3 do t[i]=i end
+		Duel.Hint(HINT_CARD,tp,id)
+	    Duel.Hint(HINTMSG_NUMBER,tp,HINT_NUMBER)
+		local ct=Duel.AnnounceNumber(tp,table.unpack(t))
+		c:AddCounter(COUNTER_LV,ct)
+	elseif c:IsCanAddCounter(COUNTER_LV,2) then
+		local t={}
+	    for i=1,2 do t[i]=i end
+		Duel.Hint(HINT_CARD,tp,id)
+	    Duel.Hint(HINTMSG_NUMBER,tp,HINT_NUMBER)
+		local ct=Duel.AnnounceNumber(tp,table.unpack(t))
+		c:AddCounter(COUNTER_LV,ct)
+	elseif c:IsCanAddCounter(COUNTER_LV,1) then
+		Duel.Hint(HINT_CARD,tp,id)
+		c:AddCounter(COUNTER_LV,1)
+	end
 end
 
 function s.atkval(e,c)

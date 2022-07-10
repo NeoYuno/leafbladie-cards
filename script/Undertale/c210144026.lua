@@ -59,7 +59,7 @@ function s.atkcon(e)
 	local c=e:GetHandler()
 	return Duel.GetAttacker()==c and c:GetBattleTarget()
 		and (Duel.GetCurrentPhase()==PHASE_DAMAGE or Duel.GetCurrentPhase()==PHASE_DAMAGE_CAL)
-        and not Duel.IsExistingMatchingCard(Card.IsFaceup,e:GetHandler(),LOCATION_ONFIELD,0,1,c)
+        and not Duel.IsExistingMatchingCard(Card.IsFaceup,e:GetHandlerPlayer(),LOCATION_ONFIELD,0,1,c)
 end
 
 function s.setcost(e,tp,eg,ep,ev,re,r,rp,chk)

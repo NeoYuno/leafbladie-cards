@@ -34,17 +34,34 @@ function s.discon(e,tp,eg,ep,ev,re,r,rp)
 	if phase~=PHASE_DAMAGE or Duel.IsDamageCalculated() then return false end
 	local a=Duel.GetAttacker()
 	local d=Duel.GetAttackTarget()
-	return d~=nil and d:IsFaceup() and (a:GetControler()==tp and a:IsCode(210144001) and a:IsRelateToBattle())
+	return d~=nil and d:IsFaceup() and (a:GetControler()==tp and a:IsCode(210144001) and a:IsRelateToBattle()) and a:GetCounter(COUNTER_LV)<19
 end
 function s.discost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
 function s.disop(e,tp,eg,ep,ev,re,r,rp,chk)
-	local a=Duel.GetAttacker()
-  local d=Duel.GetAttackTarget()
-	if not a:IsRelateToBattle() or not d:IsRelateToBattle() then return end
-	a:AddCounter(COUNTER_LV,9)
+	local at=Duel.GetAttacker()
+	if at:GetCounter(COUNTER_LV)==19 or not (at:IsFaceup() and at:IsLocation(LOCATION_MZONE)) then return end
+	if at:IsCanAddCounter(COUNTER_LV,9) then
+		at:AddCounter(COUNTER_LV,9)
+	elseif at:IsCanAddCounter(COUNTER_LV,8) then
+		at:AddCounter(COUNTER_LV,8)
+	elseif at:IsCanAddCounter(COUNTER_LV,7) then
+		at:AddCounter(COUNTER_LV,7)
+	elseif at:IsCanAddCounter(COUNTER_LV,6) then
+		at:AddCounter(COUNTER_LV,6)
+	elseif at:IsCanAddCounter(COUNTER_LV,5) then
+		at:AddCounter(COUNTER_LV,5)
+	elseif at:IsCanAddCounter(COUNTER_LV,4) then
+		at:AddCounter(COUNTER_LV,4)
+	elseif at:IsCanAddCounter(COUNTER_LV,3) then
+		at:AddCounter(COUNTER_LV,3)
+	elseif at:IsCanAddCounter(COUNTER_LV,2) then
+		at:AddCounter(COUNTER_LV,2)
+	elseif at:IsCanAddCounter(COUNTER_LV,1) then
+		at:AddCounter(COUNTER_LV,1)
+	end
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()

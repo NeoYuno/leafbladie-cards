@@ -58,9 +58,9 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 			if b2 and b3 then
 				op=Duel.SelectOption(tp,aux.Stringid(id,0),aux.Stringid(id,1),aux.Stringid(id,2))
 			elseif b2 and not b3 then
-				op=Duel.SelectOption(tp,aux.Stringid(id,0),aux.Stringid(id,1))
-			elseif not b2 and b3 then
 				op=Duel.SelectOption(tp,aux.Stringid(id,0),aux.Stringid(id,2))
+			elseif not b2 and b3 then
+				op=Duel.SelectOption(tp,aux.Stringid(id,0),aux.Stringid(id,1))
 				if op==1 then op=2 end
 			else
 				op=0

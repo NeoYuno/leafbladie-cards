@@ -19,7 +19,7 @@ function s.initial_effect(c)
 	e2:SetTarget(aux.TargetBoolFunction(Card.IsCode,210144001,210144025))
 	e2:SetValue(1000)
 	c:RegisterEffect(e2)
-    local e3=Effect.CreateEffect(c)
+    local e3=e2:Clone()
     e3:SetCode(EFFECT_UPDATE_DEFENSE)
     c:RegisterEffect(e3)
     --Add counter

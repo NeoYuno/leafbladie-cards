@@ -69,7 +69,9 @@ function s.cttg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local at=Duel.GetAttacker()
-	if at:IsRelateToBattle() and at:IsFaceup() then
+	if at:GetCounter(COUNTER_LV)==19 or not (at:IsFaceup() and at:IsLocation(LOCATION_MZONE)) then return end
+	if at:IsCanAddCounter(COUNTER_LV,1) then
+		Duel.Hint(HINT_CARD,tp,id)
 		at:AddCounter(COUNTER_LV,1)
-    end
+	end
 end
