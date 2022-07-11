@@ -34,7 +34,6 @@ end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
     local a=Duel.GetAttacker()
     local d=Duel.GetAttackTarget()
-    local 
     local tc=e:GetLabelObject()
 	if a:IsFaceup() and a:IsRelateToBattle() then
         local ct=0
