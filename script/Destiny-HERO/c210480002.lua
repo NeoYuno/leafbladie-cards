@@ -81,24 +81,24 @@ function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) and Duel.SendtoDeck(tc,nil,1,REASON_EFFECT)>0 then
         local og=Duel.GetOperatedGroup()
-        local g=Duel.GetMatchingGroup(s.dfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,e:GetHandler())
+        local g=Duel.GetMatchingGroup(s.dfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
 		if #g>0 and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 			local sg=g:Select(tp,1,1,nil)
 			Duel.HintSelection(sg)
 			Duel.Destroy(sg,REASON_EFFECT)
-            local dg=Duel.GetMatchingGroup(aux.FilterFaceupFunction(Card.IsSetCard,0xc008),tp,LOCATION_MZONE,0,nil)
-            if og:GetFirst():IsCode(40591390) and #dg>0 then
-                local tc=dg:GetFirst()
-                for tc in aux.Next(dg) do
-                    local e1=Effect.CreateEffect(e:GetHandler())
-                    e1:SetType(EFFECT_TYPE_SINGLE)
-                    e1:SetCode(EFFECT_UPDATE_ATTACK)
-                    e1:SetValue(1000)
-                    e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-                    tc:RegisterEffect(e1)
-                end
-            end
         end
+		local dg=Duel.GetMatchingGroup(aux.FilterFaceupFunction(Card.IsSetCard,0xc008),tp,LOCATION_MZONE,0,nil)
+		if og:GetFirst():IsCode(40591390) and #dg>0 then
+			local tc=dg:GetFirst()
+			for tc in aux.Next(dg) do
+				local e1=Effect.CreateEffect(e:GetHandler())
+				e1:SetType(EFFECT_TYPE_SINGLE)
+				e1:SetCode(EFFECT_UPDATE_ATTACK)
+				e1:SetValue(1000)
+				e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+				tc:RegisterEffect(e1)
+			end
+		end
     end
 end
