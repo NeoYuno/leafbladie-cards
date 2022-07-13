@@ -61,7 +61,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SpecialSummonComplete()
 end
 function s.atlimit(e,c)
-	return c:IsFaceup() and (c:IsCode(76922029) or c:IsSetCard(0x1a))q
+	return c:IsFaceup() and (c:IsCode(76922029) or c:IsSetCard(0x1a))
 end
 function s.efftg(e,c)
 	return c:IsFaceup() and c:IsControler(e:GetOwnerPlayer()) and (c:IsCode(76922029) or c:IsSetCard(0x1a))
