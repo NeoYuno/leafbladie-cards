@@ -30,7 +30,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(1-tp,LOCATION_MZONE,tp,LOCATION_REASON_TOFIELD)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local tc=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,e,tp):GetFirst()
-	if Duel.SpecialSummon(tc,0,tp,1-tp,false,false,POS_FACEUP) then
+	if Duel.SpecialSummonStep(tc,0,tp,1-tp,false,false,POS_FACEUP) then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_FIELD)
 		e1:SetCode(EFFECT_CANNOT_SELECT_BATTLE_TARGET)
@@ -54,13 +54,17 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
         e3:SetCondition(s.condition)
         e3:SetOperation(s.operation)
         tc:RegisterEffect(e3)
+		local e4=e3:Clone()
+		e4:SetCode(EVENT_BE_MATERIAL)
+		tc:RegisterEffect(e4)
 	end
+	Duel.SpecialSummonComplete()
 end
 function s.atlimit(e,c)
-	return c:IsFaceup() and c:IsCode(76922029) or (c:IsSetCard(0x1a) and c:IsType(TYPE_MONSTER))
+	return c:IsFaceup() and (c:IsCode(76922029) or c:IsSetCard(0x1a))q
 end
 function s.efftg(e,c)
-	return c:IsFaceup() and c:IsControler(e:GetOwnerPlayer()) and c:IsCode(76922029) or (c:IsSetCard(0x1a) and c:IsType(TYPE_MONSTER))
+	return c:IsFaceup() and c:IsControler(e:GetOwnerPlayer()) and (c:IsCode(76922029) or c:IsSetCard(0x1a))
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
     return e:GetHandler():IsPreviousControler(1-tp)
