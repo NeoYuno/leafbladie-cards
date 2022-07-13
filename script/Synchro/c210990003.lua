@@ -92,11 +92,11 @@ function s.retop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.atkfilter(c)
-    return c:IsFaceup() and (c:IsSetCard(0x107b) or c:IsSetCard(0x55)) and c:IsType(TYPE_MONSTER)
+    return c:IsMonster() and (c:IsSetCard(0x7b) or c:IsSetCard(0x55))
 end
 function s.atkval(e,c)
 	local LOCATION_GRAVE_MZONE=LOCATION_GRAVE+LOCATION_MZONE
-	return Duel.GetMatchingGroupCount(s.atkfilter,0,LOCATION_GRAVE_MZONE,LOCATION_GRAVE_MZONE,nil)*500
+	return Duel.GetMatchingGroupCount(s.atkfilter,e:GetHandlerPlayer(),LOCATION_GRAVE_MZONE,LOCATION_GRAVE_MZONE,nil)*500
 end
 
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
