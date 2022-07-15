@@ -12,28 +12,28 @@ function s.initial_effect(c)
 	e2:SetOperation(s.thop)
 	c:RegisterEffect(e2)
     --Destroy
-    local e3=Effect.CreateEffect(c)
-    e3:SetCategory(CATEGORY_DESTROY)
-    e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
-    e3:SetProperty(EFFECT_FLAG_DELAY)
-    e3:SetCode(EVENT_EQUIP)
-    e3:SetRange(LOCATION_SZONE)
-    e3:SetCondition(s.descon)
-    e3:SetOperation(s.desop)
-    c:RegisterEffect(e3)
+	local e3=Effect.CreateEffect(c)
+	e3:SetCategory(CATEGORY_DESTROY)
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
+	e3:SetCode(EVENT_EQUIP)
+	e3:SetRange(LOCATION_SZONE)
+	e3:SetCondition(s.descon)
+	e3:SetOperation(s.desop)
+	c:RegisterEffect(e3)
     --Search 2
 	local e4=Effect.CreateEffect(c)
 	e4:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e4:SetProperty(EFFECT_FLAG_DELAY)
 	e4:SetCode(EVENT_TO_GRAVE)
+	e4:SetCountLimit(1,id)
 	e4:SetCondition(s.thcon)
 	e4:SetTarget(s.thtg2)
 	e4:SetOperation(s.thop2)
 	c:RegisterEffect(e4)
 end
 s.listed_names={210144001,id}
-s.listed_series={0x0f4d,}
+s.listed_series={0x0f4d,0x0f5a}
 function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return c:IsAbleToGraveAsCost() end
@@ -55,9 +55,11 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 
+function s.desfilter(c,tp)
+	return c:IsSetCard(0x0f5a) and c:IsLocation(LOCATION_SZONE) and c:IsControler(tp)
+end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
-    local tc=eg:GetFirst()
-    return tc:IsSetCard() and eg:IsContains(e:GetHandler():GetEquipTarget())
+	return eg and eg:IsExists(s.desfilter,1,e:GetHandler(),tp) and eg:GetFirst():GetEquipTarget()==e:GetHandler():GetEquipTarget()
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
     Duel.Destroy(e:GetHandler(),REASON_EFFECT)
@@ -67,7 +69,7 @@ function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)
 end
 function s.thfilter2(c)
-	return c:IsSetCard() and c:IsAbleToHand()
+	return c:IsSetCard(0x0f5a) and c:IsAbleToHand() and not c:IsCode(id)
 end
 function s.thtg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter2,tp,LOCATION_DECK,0,1,nil) end
