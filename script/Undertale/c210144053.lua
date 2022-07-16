@@ -41,6 +41,10 @@ function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.thfilter(c)
 	return c:IsSetCard(0x0f4d) and c:IsMonster() and c:IsAbleToHand()
+	    and not Duel.IsExistingMatchingCard(aux.FilterFaceupFunction(Card.IsCode,c:GetCode()),tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,1,nil)
+end
+function s.tdfilter(c)
+	return c:IsSetCard(0x0f4a) and c:IsMonster() and c:IsAbleToDeck()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) end
@@ -52,6 +56,16 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	if #g>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
+		local g=Duel.SelectMatchingCard(tp,s.tdfilter,tp,LOCATION_HAND,0,1,1,nil)
+		if #g>0 then
+			Duel.BreakEffect()
+			if Duel.SelectOption(tp,aux.Stringid(id,0),aux.Stringid(id,1))==0 then
+				Duel.SendtoDeck(g,nil,0,REASON_EFFECT)
+			else
+				Duel.SendtoDeck(g,nil,1,REASON_EFFECT)
+			end
+		end
 	end
 end
 

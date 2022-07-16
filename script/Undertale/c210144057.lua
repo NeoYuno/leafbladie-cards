@@ -43,7 +43,7 @@ function s.cacon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetAttacker()==e:GetHandler():GetEquipTarget() and Duel.GetAttackTarget()~=nil
 end
 function s.catg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():GetEquipTarget():CanChainAttack(0,true) end
+	if chk==0 then return e:GetHandler():GetEquipTarget():CanChainAttack(0) end
 end
 function s.caop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
