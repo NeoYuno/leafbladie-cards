@@ -39,7 +39,7 @@ function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return c:IsAbleToGraveAsCost() end
 	Duel.SendtoGrave(c,REASON_COST)
 end
-function s.thfilter(c)
+function s.thfilter(c,tp)
 	return c:IsSetCard(0x0f4d) and c:IsMonster() and c:IsAbleToHand()
 	    and not Duel.IsExistingMatchingCard(aux.FilterFaceupFunction(Card.IsCode,c:GetCode()),tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,1,nil)
 end
@@ -47,12 +47,12 @@ function s.tdfilter(c)
 	return c:IsSetCard(0x0f4a) and c:IsMonster() and c:IsAbleToDeck()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil,tp)
 	if #g>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
