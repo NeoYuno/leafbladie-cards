@@ -31,14 +31,14 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
     --Change position
     local e4=Effect.CreateEffect(c)
-    e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
-    e4:SetCode(EVENT_PHASE+PHASE_END)
-    e4:SetRange(LOCATION_MZONE)
-    e4:SetCountLimit(1)
-    e4:SetCondition(s.defcon)
-    e4:SetTarget(s.deftg)
-    e4:SetOperation(s.defop)
-    c:RegisterEffect(e4)
+	e4:SetCategory(CATEGORY_POSITION)
+	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
+	e4:SetCode(EVENT_PHASE+PHASE_END)
+	e4:SetRange(LOCATION_MZONE)
+	e4:SetCountLimit(1)
+	e4:SetCondition(s.poscon)
+	e4:SetOperation(s.posop)
+	c:RegisterEffect(e4)
     --Special Summon
 	local e5=Effect.CreateEffect(c)
 	e5:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -108,16 +108,13 @@ function s.efilter(e,te)
 	return te:IsActiveType(TYPE_MONSTER) and te:GetOwner()~=e:GetOwner()
 end
 
-function s.defcon(e,tp,eg,ep,ev,re,r,rp)
-	return tp==Duel.GetTurnPlayer()
-end
-function s.deftg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	Duel.SetOperationInfo(0,CATEGORY_POSITION,e:GetHandler(),1,0,0)
-end
-function s.defop(e,tp,eg,ep,ev,re,r,rp)
+function s.poscon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) then
+	return c:IsAttackPos() and Duel.GetTurnPlayer()==tp
+end
+function s.posop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if c:IsAttackPos() then
 		Duel.ChangePosition(c,POS_FACEUP_DEFENSE)
 	end
 end
