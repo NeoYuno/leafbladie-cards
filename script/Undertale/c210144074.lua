@@ -41,8 +41,9 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetCode(EFFECT_SET_ATTACK_FINAL)
 		e1:SetValue(100)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-		if tc:RegisterEffect(e1) and Duel.GetAttackTarget()==nil
-        and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp) 
+		tc:RegisterEffect(e1) 
+	end
+	if Duel.GetAttackTarget()==nil and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp) 
         and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
             Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
             local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp)

@@ -25,7 +25,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.cfilter(c)
-	return c:IsFaceup() and (c:IsCode(210144001) or c:IsSetCard(0x0f4f,0x0f5c,0x0f4c))
+	return c:IsFaceup() and (c:IsCode(210144001) or (c:IsSetCard(0x0f4f) or c:IsSetCard(0x0f5c) c:IsSetCard(0x0f4c)))
 end
 function s.filter(c)
     return c:IsFaceup() and c:IsLevelAbove(8) or c:IsRankAbove(8)
