@@ -25,7 +25,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.cfilter(c)
-	return c:IsFaceup() and (c:IsCode(210144001) or (c:IsSetCard(0x0f4f) or c:IsSetCard(0x0f5c) c:IsSetCard(0x0f4c)))
+	return c:IsFaceup() and (c:IsCode(210144001) or (c:IsSetCard(0x0f4f) or c:IsSetCard(0x0f5c) or c:IsSetCard(0x0f4c)))
 end
 function s.filter(c)
     return c:IsFaceup() and c:IsLevelAbove(8) or c:IsRankAbove(8)
@@ -42,7 +42,8 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_MZONE,0,1,nil) and re:GetHandler():IsAbleToRemove() and re:GetHandler():IsRelateToEffect(re) then
+	if Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_MZONE,0,1,nil) and re:GetHandler():IsAbleToRemove()
+	and Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) then
 		Duel.Remove(eg,POS_FACEUP,REASON_EFFECT)
 	end
 end
@@ -57,19 +58,16 @@ function s.op(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
     local tc=Duel.GetFirstTarget()
     if tc:IsFaceup() and tc:IsRelateToEffect(e) then
-        local e1=Effect.CreateEffect(c)
-		e1:SetDescription(3308)
-		e1:SetProperty(EFFECT_FLAG_CLIENT_HINT)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_CANNOT_DISABLE)
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_FIELD)
+		e1:SetCode(EFFECT_CANNOT_INACTIVATE)
+		e1:SetRange(LOCATION_MZONE)
+		e1:SetTargetRange(1,0)
+		e1:SetValue(s.efilter)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e1)
-		local e2=Effect.CreateEffect(c)
-		e2:SetType(EFFECT_TYPE_FIELD)
+		local e2=e1:Clone()
 		e2:SetCode(EFFECT_CANNOT_DISEFFECT)
-		e2:SetRange(LOCATION_MZONE)
-		e2:SetValue(s.efilter)
-		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e2)
     end
 end
