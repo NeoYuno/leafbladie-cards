@@ -2,7 +2,7 @@
 local s,id=GetID()
 function s.initial_effect(c)
     c:EnableReviveLimit()
-    --Special summon
+    --Special summon itself
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_IGNITION)
@@ -38,7 +38,7 @@ function s.initial_effect(c)
 end
 s.listed_names={25955164,62340868,98434877,25833572,id}
 function s.cfilter(c,ft)
-	return (c:IsLocation(LOCATION_HAND) or c:IsFaceup()) and (c:IsCode(25955164,62340868,98434877) or aux.IsCodeListed(c,25955164,62340868,98434877))
+	return (c:IsLocation(LOCATION_HAND) or c:IsFaceup()) and (c:IsCode(25955164,62340868,98434877) or (aux.IsCodeListed(c,25955164,62340868,98434877) and c:IsMonster()))
 		and not c:IsCode(id) and c:IsAbleToGraveAsCost() and (ft>0 or c:GetSequence()<5)
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
