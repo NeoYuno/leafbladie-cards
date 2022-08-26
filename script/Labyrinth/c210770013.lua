@@ -34,7 +34,7 @@ function s.tzfilter(c)
     return c:IsCode(25955164,62340868,98434877) --and not c:IsForbidden()
 end
 function s.thfilter(c)
-    return c:IsCode(25833572) or aux.IsCodeListed(c,25833572) and c:IsAbleToHand()
+    return c:IsCode(25833572) or aux.IsCodeListed(c,25833572) and c:IsMonster() and c:IsAbleToHand()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return true end
@@ -74,13 +74,13 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
             e1:SetValue(TYPE_SPELL+TYPE_CONTINUOUS)
             tc:RegisterEffect(e1)
         end
-        local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,nil)
-        if #g>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
-            Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-            local sg=g:Select(tp,1,1,nil)
-            Duel.SendtoHand(sg,nil,REASON_EFFECT)
-            Duel.ConfirmCards(1-tp,sg)
-        end
+    end
+    local g=Duel.GetMatchingGroup(s.thfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,nil)
+    if #g>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+        Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+        local sg=g:Select(tp,1,1,nil)
+        Duel.SendtoHand(sg,nil,REASON_EFFECT)
+        Duel.ConfirmCards(1-tp,sg)
     end
 end
 
