@@ -129,7 +129,7 @@ function s.cpcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	return true
 end
 function s.cpfilter(c)
-	return c:GetType()==TYPE_SPELL+TYPE_QUICKPLAY and (aux.HasListedSetCode(c,0xe7,0xe8) or c.LVset) and c:IsAbleToGraveAsCost()
+	return c:GetType()==TYPE_SPELL+TYPE_QUICKPLAY and (c:ListsArchetype(0xe7,0xe8) or c.LVset) and c:IsAbleToGraveAsCost()
 		and c:CheckActivateEffect(false,true,false)~=nil
 end
 function s.cptg(e,tp,eg,ep,ev,re,r,rp,chk)

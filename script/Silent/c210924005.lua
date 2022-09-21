@@ -73,7 +73,7 @@ function s.bantg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return e:GetHandler():IsAbleToRemove() end
 end
 function s.thfilter(c)
-    return (aux.HasListedSetCode(c,0xe7,0xe8) or c.LVset) and c:IsMonster() and not c:IsCode(id) and c:IsAbleToHand()
+    return (c:ListsArchetype(0xe7,0xe8) or c.LVset) and c:IsMonster() and not c:IsCode(id) and c:IsAbleToHand()
 end
 function s.banop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -103,7 +103,7 @@ function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 		and c:IsPreviousLocation(LOCATION_ONFIELD)
 end
 function s.spfilter(c,e,tp)
-	return (aux.HasListedSetCode(c,0xe7,0xe8) or c.LVset) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
+	return (c:ListsArchetype(0xe7,0xe8) or c.LVset) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0

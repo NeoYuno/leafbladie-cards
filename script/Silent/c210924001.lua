@@ -33,7 +33,7 @@ function s.initial_effect(c)
 end
 s.listed_series={0xe7,0xe8,0xf5}
 function s.filter(c)
-	return (aux.HasListedSetCode(c,0xe7,0xe8) or c.LVset) and not c:IsCode(id) and c:IsSummonable(true,nil)
+	return (c:ListsArchetype(0xe7,0xe8) or c.LVset) and not c:IsCode(id) and c:IsSummonable(true,nil)
 end
 function s.sumtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_HAND,0,1,nil) end

@@ -33,7 +33,7 @@ function s.initial_effect(c)
 end
 s.listed_series={0xe7,0xe8}
 function s.thfilter(c,e,tp,ft)
-	return (aux.HasListedSetCode(c,0xe7,0xe8) or c.LVset) and c:IsMonster() and not c:IsCode(id) and (c:IsAbleToHand() or (ft>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)))
+	return (c:ListsArchetype(0xe7,0xe8) or c.LVset) and c:IsMonster() and not c:IsCode(id) and (c:IsAbleToHand() or (ft>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)))
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
@@ -57,7 +57,7 @@ function s.sumcon(e,tp,eg,ep,ev,re,r,rp)
 	return re:IsActiveType(TYPE_SPELL)
 end
 function s.sumfilter(c)
-	return (aux.HasListedSetCode(c,0xe7,0xe8) or c.LVset) and not c:IsCode(id) and c:IsSummonable(true,nil)
+	return (c:ListsArchetype(0xe7,0xe8) or c.LVset) and not c:IsCode(id) and c:IsSummonable(true,nil)
 end
 function s.sumtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.sumfilter,tp,LOCATION_HAND,0,1,nil) end
@@ -77,7 +77,7 @@ function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 		and c:IsPreviousLocation(LOCATION_ONFIELD)
 end
 function s.spfilter(c,e,tp)
-	return (aux.HasListedSetCode(c,0xe7,0xe8) or c.LVset) and c:IsMonster() and not c:IsCode(id) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
+	return (c:ListsArchetype(0xe7,0xe8) or c.LVset) and c:IsMonster() and not c:IsCode(id) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and s.spfilter(chkc,e,tp) end

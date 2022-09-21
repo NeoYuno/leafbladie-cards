@@ -33,7 +33,7 @@ function s.initial_effect(c)
 end
 s.listed_series={0xe7,0xe8}
 function s.spfilter(c,e,tp,ft)
-	return (aux.HasListedSetCode(c,0xe7,0xe8) or c.LVset) and not c:IsCode(id) and (c:IsAbleToHand() or (ft>0 and c:IsCanBeSpecialSummoned(e,0,tp,true,false)))
+	return (c:ListsArchetype(0xe7,0xe8) or c.LVset) and not c:IsCode(id) and (c:IsAbleToHand() or (ft>0 and c:IsCanBeSpecialSummoned(e,0,tp,true,false)))
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
@@ -78,7 +78,7 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function s.thfilter(c)
-    return (aux.HasListedSetCode(c,0xe7,0xe8) or c.LVset) and c:IsMonster() and not c:IsCode(id) and c:IsAbleToHand()
+    return (c:ListsArchetype(0xe7,0xe8) or c.LVset) and c:IsMonster() and not c:IsCode(id) and c:IsAbleToHand()
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

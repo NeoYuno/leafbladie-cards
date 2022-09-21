@@ -33,7 +33,7 @@ function s.initial_effect(c)
 end
 s.listed_series={0xe7,0xe8}
 function s.cfilter(c)
-	return (aux.HasListedSetCode(c,0xe7,0xe8) or c.LVset) and c:IsType(TYPE_SPELL) and (c:IsAbleToHand() or c:IsAbleToGrave())
+	return (c:ListsArchetype(0xe7,0xe8) or c.LVset) and c:IsType(TYPE_SPELL) and (c:IsAbleToHand() or c:IsAbleToGrave())
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_DECK,0,1,nil) end
@@ -51,7 +51,7 @@ function s.effcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.filter1(c,e,tp,eg,ep,ev,re,r,rp)
 	local te=c:CheckActivateEffect(false,false,false)
-	if (aux.HasListedSetCode(c,0xe7,0xe8) or c.LVset) and c:IsType(TYPE_SPELL) and te then
+	if (c:ListsArchetype(0xe7,0xe8) or c.LVset) and c:IsType(TYPE_SPELL) and te then
 		if c:IsSetCard(0x95) then
 			local tg=te:GetTarget()
 			return not tg or tg(e,tp,eg,ep,ev,re,r,rp,0)
@@ -63,7 +63,7 @@ function s.filter1(c,e,tp,eg,ep,ev,re,r,rp)
 end
 function s.filter2(c,e,tp,eg,ep,ev,re,r,rp)
 	local te=c:CheckActivateEffect(false,false,false)
-	if (aux.HasListedSetCode(c,0xe7,0xe8) or c.LVset) and c:IsType(TYPE_SPELL) and not c:IsType(TYPE_EQUIP+TYPE_CONTINUOUS) and te then
+	if (c:ListsArchetype(0xe7,0xe8) or c.LVset) and c:IsType(TYPE_SPELL) and not c:IsType(TYPE_EQUIP+TYPE_CONTINUOUS) and te then
 		if c:IsSetCard(0x95) then
 			local tg=te:GetTarget()
 			return not tg or tg(e,tp,eg,ep,ev,re,r,rp,0)
@@ -101,6 +101,8 @@ function s.effop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 	elseif (tpe&TYPE_FIELD)~=0 then
 		Duel.MoveToField(tc,tp,tp,LOCATION_FZONE,POS_FACEUP,true)
+	else
+		Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 	end
 	tc:CreateEffectRelation(te)
 	if co then co(te,tp,eg,ep,ev,re,r,rp,1) end
@@ -111,6 +113,12 @@ function s.effop(e,tp,eg,ep,ev,re,r,rp)
 			tg(te,tp,eg,ep,ev,re,r,rp,1)
 		end
 	end
+	Duel.BreakEffect()
+	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
+	local etc=g:GetFirst()
+	for etc in aux.Next(g) do
+		etc:CreateEffectRelation(te)
+	end
 	if op then 
 		if tc:IsSetCard(0x95) then
 			op(e,tp,eg,ep,ev,re,r,rp)
@@ -118,6 +126,12 @@ function s.effop(e,tp,eg,ep,ev,re,r,rp)
 			op(te,tp,eg,ep,ev,re,r,rp)
 		end
 	end
+	tc:ReleaseEffectRelation(te)
+	etc=g:GetFirst()
+	for etc in aux.Next(g) do
+		etc:ReleaseEffectRelation(te)
+	end
+	Duel.SendtoGrave(tc,REASON_RULE)
 end
 
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
@@ -126,7 +140,7 @@ function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 		and c:IsPreviousLocation(LOCATION_ONFIELD)
 end
 function s.thfilter(c)
-	return (aux.HasListedSetCode(c,0xe7,0xe8) or c.LVset) and c:IsType(TYPE_SPELL) and (c:IsLocation(LOCATION_GRAVE) or c:IsFaceup()) and c:IsAbleToHand()
+	return (c:ListsArchetype(0xe7,0xe8) or c.LVset) and c:IsType(TYPE_SPELL) and (c:IsLocation(LOCATION_GRAVE) or c:IsFaceup()) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED) and chkc:IsControler(tp) and s.thfilter(chkc) end
