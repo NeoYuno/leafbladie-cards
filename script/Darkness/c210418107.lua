@@ -34,7 +34,7 @@ function s.initial_effect(c)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetTargetRange(LOCATION_MZONE,0)
     e4:SetCondition(s.atkcon)
-	e4:SetTarget(s.atktg)
+	e4:SetTarget(function(e,c) return c~=e:GetHandler() and c:IsFaceup() and c:IsAttribute(ATTRIBUTE_DARK) end)
 	e4:SetValue(s.atkval)
 	c:RegisterEffect(e4)
     local e5=e4:Clone()
@@ -69,9 +69,6 @@ function s.tgcon(e)
 end
 function s.atkcon(e)
 	return e:GetHandler():IsInExtraMZone()
-end
-function s.atktg(e,c)
-    return Duel.GetMatchingGroup(Card.IsAttribute,e:GetHandlerPlayer(),LOCATION_MZONE,0,e:GetHandler(),ATTRIBUTE_DARK)
 end
 function s.atkval(e,c)
 	return Duel.GetCounter(0,1,1,COUNTER_PUMPKIN)*200

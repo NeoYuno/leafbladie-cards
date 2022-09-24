@@ -1,4 +1,4 @@
---Card Reaper
+--Darkness Card Reaper
 local s,id=GetID()
 function s.initial_effect(c)
 	--summon with no tribute

@@ -6,7 +6,7 @@ function s.initial_effect(c)
     e1:SetDescription(aux.Stringid(id,0))
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e1:SetCode(EFFECT_SUMMON_PROC)
+	e1:SetCode(EFFECT_SET_PROC)
 	e1:SetCondition(s.ntcon)
 	c:RegisterEffect(e1)
     --Flip

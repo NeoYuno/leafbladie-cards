@@ -39,6 +39,9 @@ end
 function s.spfilter(c,e,tp)
 	return c:IsMonster() and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
+function s.filter(c)
+    return c:IsFaceup() and c:GetBaseAttack()==920
+end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and s.spfilter(chkc,e,tp) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -50,8 +53,8 @@ end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if not tc:IsRelateToEffect(e) or Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)<=0 then return end
-    if not Duel.IsExistingMatchingCard(Card.GetBaseAttack,tp,LOCATION_MZONE,0,1,nil,920) then
+	if not tc:IsRelateToEffect(e) or Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP_DEFENSE)<=0 then return end
+    if not Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_MZONE,0,1,nil) then
         --Change DEF
         local e1=Effect.CreateEffect(c)
         e1:SetType(EFFECT_TYPE_SINGLE)
@@ -72,7 +75,7 @@ function s.ctop(e,tp,eg,ep,ev,re,r,rp)
 			tc:AddCounter(COUNTER_PUMPKIN,1)
 		end
 	end
-    if Duel.IsExistingMatchingCard(Card.GetBaseAttack,tp,LOCATION_MZONE,0,1,nil,920) and #g2>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+    if Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_MZONE,0,1,nil) and #g2>0 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
         Duel.BreakEffect()
         for tc in aux.Next(g2) do
             if tc:IsCanAddCounter(COUNTER_PUMPKIN,1) then
