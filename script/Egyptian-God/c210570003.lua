@@ -43,19 +43,22 @@ function s.initial_effect(c)
 	e9:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e9:SetProperty(EFFECT_FLAG_DELAY)
 	e9:SetRange(LOCATION_SZONE)
-	e9:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e9:SetCode(EVENT_SUMMON_SUCCESS)
 	e9:SetCondition(s.ctcon)
 	e9:SetOperation(s.ctop)
 	c:RegisterEffect(e9)
+	local e10=e9:Clone()
+	e10:SetCode(EVENT_SPSUMMON_SUCCESS)
+	c:RegisterEffect(e10)
     --Search (ignition)
-    local e10=Effect.CreateEffect(c)
-    e10:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
-    e10:SetType(EFFECT_TYPE_IGNITION)
-    e10:SetRange(LOCATION_SZONE)
-    e10:SetCost(s.thcost)
-    e10:SetTarget(s.thtg)
-    e10:SetOperation(s.thop)
-    c:RegisterEffect(e10)
+    local e11=Effect.CreateEffect(c)
+    e11:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
+    e11:SetType(EFFECT_TYPE_IGNITION)
+    e11:SetRange(LOCATION_SZONE)
+    e11:SetCost(s.thcost)
+    e11:SetTarget(s.thtg)
+    e11:SetOperation(s.thop)
+    c:RegisterEffect(e11)
     --register names
 	aux.GlobalCheck(s,function()
 		s.card_list={}
@@ -71,8 +74,8 @@ s.listed_names={10000020,10000000,CARD_RA,id}
 s.counter_list={COUNTER_DIVINE}
 --Search on activation
 function s.filter(c)
-	return c:IsCode(210570001,210570002,210651802,210651801,210651803,79387392,7373632,5253985,39913299,269012
-        ,42469671,79868386,4059313,59094601,79339613,11587414) and not c:IsCode(id) and c:IsAbleToHand()
+	return c:IsCode(210570001,210570002,210651801,210651802,210651803,79387392,7373632,5253985,39913299,269012,59094601,79339613) 
+		and not c:IsCode(id) and c:IsAbleToHand()
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
