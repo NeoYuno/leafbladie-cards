@@ -42,11 +42,10 @@ end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-    local ph=Duel.GetCurrentPhase()
     local g=Duel.GetMatchingGroup(s.desfilter,tp,0,LOCATION_MZONE,nil,tc:GetAttack())
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
     local rmc=Duel.SelectMatchingCard(tp,s.rmfilter,tp,0,LOCATION_MZONE,1,1,nil,tc:GetAttack()):GetFirst()
-    if Duel.Remove(rmc,POS_FACEUP,REASON_EFFECT)>0 and (ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE)
+    if Duel.Remove(rmc,POS_FACEUP,REASON_EFFECT)>0 and Duel.IsBattlePhase()
     and #g>0 and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
         Duel.BreakEffect()
         Duel.Destroy(g,REASON_EFFECT)
